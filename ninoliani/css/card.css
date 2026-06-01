@@ -1,0 +1,502 @@
+.main_card_content {
+    display: flex;
+    gap: 108px;
+    padding-bottom: 128px;
+    border-bottom: 1px solid #3C3C3C;
+}
+
+.main_card_gallery,
+.main_card_gallery_wrapper {
+    width: 686px;
+}
+
+.main_card_gallery {
+    display: flex;
+    flex-direction: column;
+}
+
+.main_card_img {
+    width: 686px;
+    height: 1028px;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.gallery_modal {
+    position: fixed;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: .35s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1010;
+}
+
+.gallery_modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.gallery_backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 10, 10, .94);
+    backdrop-filter: blur(12px);
+}
+
+.gallery_stage {
+    position: relative;
+    z-index: 2;
+    max-width: 92vw;
+    max-height: 92vh;
+    overflow: hidden;
+}
+
+.gallery_img {
+    max-width: 92vw;
+    max-height: 92vh;
+    object-fit: contain;
+
+    transform-origin: center;
+    will-change: transform;
+    cursor: grab;
+}
+
+.gallery_close,
+.gallery_btn {
+    position: absolute;
+    z-index: 3;
+    color: #fff;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.gallery_close {
+    top: 20px;
+    right: 25px;
+    font-size: 48px;
+}
+
+.gallery_btn {
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 64px;
+}
+
+.gallery_prev {
+    left: 20px;
+}
+
+.gallery_next {
+    right: 20px;
+}
+
+
+.main_card_title {
+    margin: 0;
+    color: #161616;
+    text-align: center;
+    font-family: "Cormorant Infant";
+    font-size: 56px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 100%;
+    margin-bottom: 8px;
+}
+
+.main_card_descr_wrapper {
+    width: 510px;
+    display: flex;
+    flex-direction: column;
+    gap: 112px;
+}
+
+.main_card_first_wrapper {
+    width: 100%;
+    padding-top: 32px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.main_card_article,
+.main_card_preorder,
+.main_card_descr,
+.main_card_links,
+.main_card_btn,
+.main_card_btn_text,
+.size-table td,
+.size-table th,
+.size-table thead th,
+.table_btn {
+    font-size: 18px;
+    line-height: 140%;
+}
+
+.main_card_article,
+.main_card_preorder {
+    margin: 0 0 16px;
+    color: #7F7F7F;
+    font-style: normal;
+    font-weight: 300;
+}
+
+.main_card_preorder,
+.main_card_btn_text {
+    color: #161616;
+    font-style: normal;
+    font-weight: 300;
+    letter-spacing: 6%;
+    text-transform: uppercase;
+}
+
+.main_card_price_wrapper {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 56px;
+}
+
+.main_card_price,
+.main_card_price_sale {
+    margin: 0;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 140%;
+}
+
+.main_card_price {
+    color: #161616;
+}
+
+.main_card_price_sale {
+    color: #7F7F7F;
+    text-decoration-line: line-through;
+}
+
+.main_card_btns_wrapper {
+    display: flex;
+    gap: 20px;
+}
+
+.main_card_btn {
+    width: 245px;
+    padding: 11px 0;
+
+    color: #FFF;
+    font-style: normal;
+    font-weight: 300;
+    letter-spacing: 6%;
+
+    border: 1px solid #161616;
+    background: #161616;
+
+    transition: .3s ease-in-out;
+}
+
+.side_menu{
+    z-index: 1200;
+}
+
+.main_card_btn:hover {
+    color: #161616;
+    background: transparent;
+}
+
+.main_card_descr_btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+/* Accordion */
+
+.size {
+    padding: 16px 0;
+    border-bottom: 1px solid #C0C0C0;
+}
+
+.main_card_descr {
+    margin: 0;
+
+    font-style: normal;
+    font-weight: 300;
+
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+
+    transition: all 0.3s ease;
+}
+
+.main_card_description_wrapper.active .main_card_descr {
+    max-height: 500px;
+    opacity: 1;
+    margin-top: 16px;
+}
+
+.main_card_arrow_svg {
+    transition: transform 0.3s ease;
+}
+
+.main_card_description_wrapper.active .main_card_arrow_svg {
+    transform: rotate(180deg);
+}
+
+.main_card_links {
+    color: #7F7F7F;
+    font-style: normal;
+    font-weight: 300;
+    text-decoration-line: underline;
+    text-transform: lowercase;
+}
+
+.main_card_links:hover {
+    color: #161616;
+}
+
+/* Table */
+
+.size-table {
+    width: 510px;
+
+    table-layout: fixed;
+    border-collapse: collapse;
+
+    background: transparent;
+    overflow: hidden;
+
+    border: 1px solid #C0C0C0;
+}
+
+.size-table thead th {
+    background: transparent;
+    color: #161616;
+    font-weight: 700;
+    height: 48px;
+    border-bottom: 1px solid #C0C0C0;
+}
+
+.size-table td,
+.size-table th {
+    width: 101px;
+    height: 48px;
+
+    text-align: center;
+    color: #161616;
+    font-weight: 300;
+
+    border-bottom: 1px solid #C0C0C0;
+    border-right: 1px solid #C0C0C0;
+}
+
+.size-table td:last-child,
+.size-table th:last-child {
+    border-right: none;
+}
+
+.size-table td:first-child {
+    width: 102px;
+    border-left: 1px solid #C0C0C0;
+}
+
+/* Tables */
+
+.tables-container {
+    display: grid;
+    justify-content: center;
+}
+
+/* Both tables */
+
+.sm,
+.inches {
+    grid-area: 1 / 1;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transform: translateY(6px);
+
+    transition: all 0.25s ease;
+}
+
+/* Active state */
+
+.sm.active,
+.inches.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Buttons */
+
+.main_card_tables_btns {
+    display: flex;
+    margin-bottom: 8px;
+}
+
+.table_btn {
+    width: 255.5px;
+    padding: 11px 0;
+
+    color: #FFF;
+    font-weight: 300;
+    letter-spacing: 6%;
+    text-transform: uppercase;
+
+    border: 1px solid #161616;
+    background: #161616;
+
+    cursor: pointer;
+}
+
+.table_btn.active {
+    color: #161616;
+    background: transparent;
+    border: 1px solid #C0C0C0;
+}
+
+/* Description */
+
+.descr_mb {
+    margin-bottom: 16px;
+}
+
+.size-guide-content {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+
+    transition: all 0.4s ease;
+}
+
+/* Open state */
+
+.main_card_description_wrapper.active .size-guide-content {
+    max-height: 2000px;
+    opacity: 1;
+}
+
+/* Layout fix */
+
+.main_card_description_wrapper.active.size_none {
+    border-bottom: none;
+}
+
+/* ========================= */
+/* Lens base */
+/* ========================= */
+
+.zoom_lens {
+    position: fixed;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    pointer-events: none;
+
+    opacity: 0;
+    transform: scale(0.9);
+
+    transition: opacity .15s ease, transform .15s ease;
+
+    z-index: 9999;
+
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+
+    box-shadow:
+        0 60px 160px rgba(0, 0, 0, 0.45),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+
+    overflow: hidden;
+
+    will-change: transform, left, top;
+}
+
+.zoom_lens.active {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Image inside lens */
+.zoom_lens_img {
+    position: absolute;
+    inset: 0;
+
+    background-repeat: no-repeat;
+    background-size: 400%;
+    /* 4x zoom */
+
+    will-change: transform, background-position;
+    transform: translateZ(0);
+}
+
+/* Glow layer */
+.zoom_lens_glow {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+
+    box-shadow:
+        inset 0 0 30px rgba(255, 255, 255, 0.15),
+        inset 0 0 90px rgba(0, 0, 0, 0.25);
+}
+
+/* Hide on mobile */
+@media (max-width: 1279px) {
+    .zoom_lens {
+        display: none;
+    }
+}
+
+.header {
+    position: sticky;
+    top: 0;
+    background: #F9F9F9;
+    z-index: 1000;
+}
+
+.main_card_content {
+    display: flex;
+    align-items: flex-start;
+}
+
+.main_card_descr_wrapper {
+    position: sticky;
+    top: 124px;
+}
+
+.main_card_descr_btn {
+    position: relative;
+}
+
+.main_card_descr_btn::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 2px;
+    width: calc(100% - 17px);
+    height: 1px;
+    background: currentColor;
+
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.3s ease;
+}
+
+/* Open state */
+.main_card_description_wrapper.active .main_card_descr_btn::after {
+    transform: scaleX(1);
+}

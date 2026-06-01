@@ -1,0 +1,623 @@
+.catalog_menu {
+    position: relative;
+}
+
+.catalog_menu_container {
+    position: relative;
+}
+
+.catalog_nav_list {
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+}
+
+.nav_list_item {
+    position: relative;
+}
+
+.catalog_collection_logo {
+    width: 56px;
+    height: 57px;
+
+    opacity: 0;
+
+    transition: opacity 0.3s ease;
+}
+
+.catalog_logo_wrapper {
+    position: absolute;
+    right: -55px;
+    top: -16px;
+
+    pointer-events: none;
+}
+
+/* Sun reveal */
+.catalog_link:hover .catalog_collection_logo {
+    opacity: 1;
+}
+
+.nav_catalog_collections_panel {
+    position: absolute;
+    top: 38px;
+    width: 1392px;
+    padding: 32px 0;
+    background-color: #F9F9F9;
+    display: flex;
+    justify-content: center;
+    box-shadow: 8px 8px 30px 0 rgba(160, 160, 160, 0.25);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition:
+        opacity 0.3s ease,
+        visibility 0.3s ease,
+        transform 0.3s ease;
+    z-index: 100;
+}
+
+.nav_catalog_collections_panel.active {
+    opacity: 1;
+    visibility: visible;
+
+    transform: translateY(0);
+}
+
+.catalog_collections_list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 16px;
+}
+
+.catalog_link {
+    text-align: center;
+}
+
+.catalog_name {
+    margin: 0;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    color: #161616;
+    font-family: 'Waterfall';
+    font-size: 135px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 100%;
+    text-align: center;
+}
+
+.catalog_title_wrapper {
+    position: relative;
+    display: inline;
+}
+
+.catalog_greek_name {
+    position: absolute;
+    top: 27px;
+    right: -41px;
+    color: #161616;
+    font-family: "Cormorant Infant";
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 140%;
+    /* 25.2px */
+    text-transform: capitalize;
+}
+
+.catalog_content {
+    display: flex;
+    justify-content: center;
+}
+
+.catalog_sort_btns_wrapper {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 32px;
+}
+ /* Dresses */
+
+ .nav_catalog_dresses_panel {
+    position: absolute;
+    top: 38px;
+    width: 1392px;
+    padding: 32px 0;
+    background-color: #F9F9F9;
+
+    display: flex;
+    justify-content: center;
+
+    box-shadow: 8px 8px 30px 0 rgba(160, 160, 160, 0.25);
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+
+    transition:
+        opacity 0.3s ease,
+        visibility 0.3s ease,
+        transform 0.3s ease;
+
+    z-index: 100;
+}
+
+.nav_catalog_dresses_panel.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* ========================= */
+/* FILTER + SORT WRAPPER */
+/* ========================= */
+
+.filter_wrapper,
+.sort_wrapper {
+    position: relative;
+}
+
+.filter_btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    color: #161616;
+
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 140%;
+    text-transform: uppercase;
+
+    background: transparent;
+    border: none;
+
+    cursor: pointer;
+    letter-spacing: 6%;
+    padding: 0;
+}
+
+/* ========================= */
+/* ARROW */
+/* ========================= */
+
+.arrow_filter {
+    transition: transform 0.3s ease;
+}
+
+.filter_btn.active .arrow_filter {
+    transform: rotate(180deg);
+}
+
+/* ========================= */
+/* DROPDOWNS BASE */
+/* ========================= */
+
+.filter_dropdown,
+.sort_dropdown {
+    position: absolute;
+
+    top: 42px;
+
+    background: #F9F9F9;
+
+    border: 1px solid #E8E8E8;
+
+    box-shadow: 8px 8px 30px 0 rgba(160, 160, 160, 0.25);
+
+    opacity: 0;
+    visibility: hidden;
+
+    transform: translateY(10px);
+
+    transition:
+        opacity 0.3s ease,
+        visibility 0.3s ease,
+        transform 0.3s ease;
+
+    z-index: 200;
+}
+
+/* FILTER POSITION */
+.filter_dropdown {
+    left: 0;
+
+
+    display: flex;
+    gap: 24px;
+
+    padding: 32px 24px;
+}
+
+/* SORT POSITION */
+.sort_dropdown {
+    right: 0;
+
+    width: 193px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    padding: 24px;
+}
+
+/* ACTIVE */
+.filter_dropdown.active,
+.sort_dropdown.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* ========================= */
+/* FILTER COLUMN */
+/* ========================= */
+
+.filter_column {
+    display: flex;
+    flex-direction: column;
+}
+
+.filter_title {
+    margin: 0;
+    margin-bottom: 16px;
+    white-space: nowrap;
+
+    color: #161616;
+
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 140%;
+}
+
+/* ========================= */
+/* FILTER LABEL */
+/* ========================= */
+
+.filter_column label {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    width: fit-content;
+
+    margin-bottom: 4px;
+
+    color: #161616;
+
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 140%;
+    white-space: nowrap;
+
+    cursor: pointer;
+}
+
+.filter_column label:last-child {
+    margin-bottom: 0;
+}
+
+/* ========================= */
+/* CUSTOM CHECKBOX (SVG) */
+/* ========================= */
+
+.filter_column input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: 14px;
+    height: 14px;
+
+    border: 1px solid #161616;
+
+    background: transparent;
+
+    cursor: pointer;
+
+    position: relative;
+
+    display: grid;
+    place-items: center;
+
+    flex-shrink: 0;
+}
+
+/* SVG checkmark */
+.filter_column input[type="checkbox"]::after {
+    content: "";
+
+    width: 10px;
+    height: 9px;
+    opacity: 0;
+
+    transition: opacity 0.2s ease;
+
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='9' viewBox='0 0 10 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3.04785 6.88227L8.83566 0.148374C9.0057 -0.0494578 9.28138 -0.0494578 9.45142 0.148374C9.62146 0.346205 9.62146 0.666954 9.45142 0.864785L3.35573 7.95689C3.18569 8.15472 2.91 8.15472 2.73997 7.95689L0.127528 4.91742C-0.0425092 4.71959 -0.0425092 4.39884 0.127528 4.201C0.297565 4.00317 0.573249 4.00317 0.743285 4.201L3.04785 6.88227Z' fill='%23161616'/%3E%3C/svg%3E");
+}
+
+/* Show checkmark */
+.filter_column input[type="checkbox"]:checked::after {
+    opacity: 1;
+}
+
+/* ========================= */
+/* FILTER UNDERLINE ANIMATION */
+/* ========================= */
+
+.filter_column label span,
+.sort_option span {
+    position: relative;
+}
+
+/* Base line */
+.filter_column label span::after,
+.sort_option span::after {
+    content: '';
+
+    position: absolute;
+
+    left: 0;
+    bottom: 3px;
+
+    width: 100%;
+    height: 1px;
+
+    background: currentColor;
+
+    transform: scaleX(0);
+    transform-origin: center;
+
+    transition: transform 0.3s ease;
+}
+
+/* Hover state */
+.filter_column label:hover span::after,
+.sort_option:hover span::after {
+    transform: scaleX(1);
+}
+
+/* Checked filter underline */
+.filter_column input[type="checkbox"]:checked+span::after {
+    transform: scaleX(1);
+}
+
+/* ========================= */
+/* SORT OPTION */
+/* ========================= */
+
+.sort_option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 100%;
+
+    padding: 0;
+
+    border: none;
+    background: transparent;
+
+    cursor: pointer;
+
+    color: #161616;
+
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 140%;
+}
+
+/* SORT CHECK */
+.sort_check {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.sort_option.active .sort_check {
+    opacity: 1;
+}
+
+/* Active underline */
+.sort_option.active span::after {
+    transform: scaleX(1);
+}
+
+/* ========================= */
+/* UNDERLINE FOR FILTER / SORT BUTTONS */
+/* ========================= */
+
+/* Underline line */
+.filter_btn::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 2px;
+    width: calc(100% - 12px);
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.3s ease;
+}
+
+/* Hover state */
+.filter_btn:hover::after {
+    transform: scaleX(1);
+}
+
+/* Active state applied by JavaScript */
+.filter_btn.active::after {
+    transform: scaleX(1);
+}
+
+/* ========================= */
+
+.counter_box {
+    color: #161616;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 140%;
+    /* 25.2px */
+}
+
+.second_btn_wrapper {
+    display: flex;
+    gap: 20px;
+}
+
+.card_price {
+    color: #161616;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 140%;
+}
+
+.card_price_non_sale {
+    color: #7F7F7F;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 140%;
+    text-decoration-line: line-through;
+}
+
+.card_price_wrapper {
+    display: flex;
+    gap: 8px;
+}
+
+.card_name {
+    margin: 0;
+    color: #161616;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 140%;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    max-width: 333px;
+    transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.card_img {
+    object-fit: cover;
+    width: 100%;
+    height: 500px;
+    transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.card_img_wrapper {
+    height: 500px;
+    margin-bottom: 8px;
+    overflow: hidden;
+}
+
+.card_name_wrapper {
+    margin-bottom: 2px;
+}
+
+.card_name,
+.card_price_wrapper {
+    transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .card:hover {
+        transform: translate3d(0, -2px, 0);
+    }
+
+    .card:hover .card_img {
+        transform: scale(1.035);
+    }
+
+    .card:hover .card_name,
+    .card:hover .card_price_wrapper {
+        opacity: 0.82;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .card,
+    .card_img,
+    .card_name,
+    .card_price_wrapper {
+        transition-duration: 0.01ms;
+    }
+}
+
+.catalog_cards_wrapper {
+    display: flex;
+    row-gap: 32px;
+    column-gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+}
+
+.pages_wrapper {
+    display: flex;
+    gap: 8px;
+}
+
+.first_page,
+.divider_page,
+.last_page {
+    color: #161616;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+    text-transform: uppercase;
+}
+
+.pag_box {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.catalog_pagination_wrapper {
+    display: flex;
+    justify-content: right;
+}
+
+.load_btn {
+    color: #FFF;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 140%;
+    letter-spacing: 1.08px;
+    border: 1px solid #161616;
+    background: #161616;
+    padding: 11px 66px;
+    margin-right: 411px;
+    transition: .3s ease-in-out;
+}
+
+.load_btn:hover {
+    background: transparent;
+    color: #161616;
+}
+
+.catalog_content_second {
+    padding-bottom: 128px;
+    border-bottom: 1px solid #3c3c3c;
+}

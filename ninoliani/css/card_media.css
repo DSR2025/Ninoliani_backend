@@ -1,0 +1,358 @@
+@media (max-width: 1439px) {
+
+    .main_card_title {
+        font-size: 48px;
+    }
+
+    .main_card_first_wrapper {
+        padding-top: 24px;
+    }
+
+    .main_card_content {
+        gap: 98px;
+    }
+
+    .main_card_btn {
+        width: 215px;
+    }
+
+    .main_card_descr_wrapper {
+        width: 450px;
+    }
+
+    .main_card_img {
+        width: 606px;
+        height: 909px;
+    }
+
+    .main_card_gallery,
+    .main_card_gallery_wrapper {
+        width: 606px;
+    }
+
+    .table_btn {
+        width: 226px;
+    }
+
+    .size-table td,
+    .size-table th,
+    .size-table thead th {
+        font-size: 16px;
+    }
+
+    .size-table td,
+    .size-table th {
+        width: 88px;
+
+    }
+
+    .size-table {
+        width: 450px;
+    }
+
+
+
+}
+
+@media (max-width: 1279px) {
+
+    .main_card_title {
+        font-size: 40px;
+    }
+
+    .main_card_btn {
+        padding: 8px 0;
+    }
+
+    .table_btn {
+        padding: 8px 0;
+    }
+
+    .main_card_content {
+        gap: 79px;
+    }
+
+    .main_card_price_wrapper {
+        margin-bottom: 40px;
+        gap: 8px;
+    }
+
+    .main_card_price,
+    .main_card_price_sale {
+        font-size: 24px;
+
+    }
+
+    .main_card_btn {
+        width: 100%;
+    }
+
+    .main_card_btns_wrapper {
+        width: 100%;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .main_card_descr_wrapper {
+        width: 359px;
+    }
+
+    .main_card_img {
+        width: 484px;
+        height: 725px;
+    }
+
+    .main_card_gallery,
+    .main_card_gallery_wrapper {
+        width: 484px;
+    }
+
+    .table_btn {
+        width: 180px;
+        padding: 8px 0;
+    }
+
+    .main_card_article,
+    .main_card_preorder,
+    .main_card_descr,
+    .main_card_links,
+    .main_card_btn,
+    .main_card_btn_text,
+    .table_btn {
+        font-size: 16px;
+
+    }
+
+    .size-table td,
+    .size-table th,
+    .size-table thead th {
+        font-size: 14px;
+    }
+
+    .size-table td,
+    .size-table th {
+        width: 71px;
+        height: 40px;
+
+    }
+
+    .size-table {
+        width: 359px;
+    }
+
+}
+
+@media (max-width: 1023px) {
+
+    .main_card_content {
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .main_card_first_wrapper {
+        padding-top: 0px;
+    }
+
+    .main_card_descr_wrapper {
+        width: 100%;
+    }
+
+    .main_card_btns_wrapper {
+        width: 100%;
+        flex-direction: row;
+        gap: 16px;
+    }
+
+    .size-table td,
+    .size-table th,
+    .size-table thead th {
+        font-size: 16px;
+    }
+
+    .main_card_descr_wrapper {
+        gap: 40px;
+    }
+
+    .main_card_description_wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .main_card_descr {
+        text-align: center;
+    }
+
+    .table_btn {
+        width: 100%;
+    }
+
+    .main_card_content {
+        padding-bottom: 80px;
+
+    }
+
+    .size-table {
+        width: 100%;
+    }
+
+    .size-table td,
+    .size-table th {
+        width: 147px;
+        height: 40px;
+
+    }
+
+    .main_card_gallery_wrapper {
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+
+        scrollbar-width: none;
+    }
+
+    .main_card_gallery_wrapper::-webkit-scrollbar {
+        display: none;
+    }
+
+    .main_card_gallery {
+        display: flex;
+        flex-direction: row;
+        gap: 8px;
+    }
+
+    /* Important layout rule */
+    .main_card_img {
+        width: 454px;
+        height: auto;
+        flex-shrink: 0;
+        scroll-snap-align: center;
+    }
+
+    .header {
+        position: static;
+    }
+
+    .main_card_descr_wrapper {
+        position: static;
+    }
+}
+
+
+@media (max-width: 767px) {
+    .main_card_title {
+        font-size: 32px;
+    }
+
+    .main_card_content {
+        gap: 16px;
+    }
+
+    .size-table td,
+    .size-table th,
+    .size-table thead th {
+        font-size: 14px;
+    }
+
+    .main_card_article,
+    .main_card_preorder,
+    .main_card_descr,
+    .main_card_links,
+    .main_card_btn,
+    .main_card_btn_text,
+    .table_btn {
+        font-size: 14px;
+    }
+
+    .main_card_img {
+        width: 379px;
+    }
+
+    .main_card_article {
+        margin: 0 0 8px;
+    }
+
+    .main_card_price_wrapper {
+        margin-bottom: 32px;
+        gap: 8px;
+    }
+
+    .main_card_btns_wrapper {
+        width: 100%;
+        flex-direction: row;
+        gap: 8px;
+    }
+
+    .main_card_content {
+        padding-bottom: 80px;
+    }
+
+    .main_card_descr_wrapper {
+        gap: 24px;
+    }
+
+    .size-table td,
+    .size-table th {
+        width: 83px;
+        height: 40px;
+    }
+
+    .main_card_btn,
+    .table_btn {
+        padding: 9px 0;
+    }
+
+    .main_card_arrow_svg {
+        width: 8px;
+        height: 8px;
+    }
+
+    .main_card_descr_btn {
+        gap: 6px;
+    }
+
+    .main_card_descr_btn::after {
+        width: calc(100% - 13px);
+
+    }
+
+    .size-table thead th {
+        height: 40px;
+    }
+}
+
+@media (max-width: 429px) {
+
+    .main_card_img {
+        width: 328px;
+    }
+
+    .main_card_title {
+        font-size: 28px;
+    }
+
+    .main_card_price,
+    .main_card_price_sale {
+        font-size: 20px;
+    }
+
+    .size-table td,
+    .size-table th {
+        width: 72px;
+    }
+}
+
+@media (max-width: 374px) {
+
+    .main_card_img {
+        width: 251px;
+    }
+
+    .size-table td,
+    .size-table th {
+        width: 55px;
+    }
+}

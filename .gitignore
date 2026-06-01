@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtualenv
+venv/
+
+# Django
+db.sqlite3
+
+# Environment
+.env
+
+# VS Code
+.vscode/
+
+# Static cache
+staticfiles/
+
+# Media
+media/
+
+# Composer
+ninoliani/vendor/

@@ -1,0 +1,383 @@
+@media (max-width: 1439px) {
+
+    .nav_catalog_collections_panel,
+    .nav_catalog_dresses_panel {
+        width: 1232px;
+    }
+
+    .catalog_name {
+        font-size: 118px;
+
+    }
+
+    .card {
+        max-width: 293px;
+    }
+
+    .card_img_wrapper,
+    .card_img {
+        height: 440px;
+    }
+
+    .load_btn {
+        margin-right: 346px;
+        padding: 12px 52px;
+    }
+
+
+
+}
+
+@media (max-width: 1279px) {
+
+    .nav_catalog_collections_panel,
+    .nav_catalog_dresses_panel {
+        width: 984px;
+    }
+
+    /* Text */
+    .filter_btn,
+    .counter_box,
+    .catalog_greek_name,
+    .card_name,
+    .card_price,
+    .card_price_non_sale,
+    .first_page,
+    .divider_page,
+    .last_page,
+    .filter_title,
+    .filter_column label,
+    .sort_option,
+    .load_btn {
+        font-size: 16px;
+    }
+
+    .filter_title {
+        margin-bottom: 12px;
+    }
+
+    .filter_column label {
+        margin-bottom: 6px;
+        white-space: nowrap;
+    }
+
+    .filter_dropdown {
+        gap: 16px;
+        padding: 24px 16px;
+    }
+
+    .filter_column label {
+        gap: 6px;
+    }
+
+    .second_btn_wrapper {
+        gap: 16px;
+    }
+
+    .nav_catalog_collections_panel,
+    .nav_catalog_dresses_panel {
+        padding: 24px 0;
+    }
+
+
+
+    .sort_dropdown {
+        width: 161px;
+        gap: 6px;
+        padding: 24px 16px;
+    }
+
+    .catalog_name {
+        font-size: 94px;
+    }
+
+    .catalog_sort_btns_wrapper,
+    .catalog_cards_wrapper {
+        margin-bottom: 24px;
+    }
+
+    .catalog_cards_wrapper {
+        row-gap: 24px;
+        column-gap: 16px;
+    }
+
+    .card {
+        max-width: 234px;
+    }
+
+    .card_img_wrapper,
+    .card_img {
+        height: 351px;
+    }
+
+    .load_btn {
+        margin-right: 175px;
+        padding: 9px 130px;
+    }
+
+    .arrow_pag_right,
+    .arrow_pag_left {
+        width: 30px;
+    }
+
+    .catalog_collection_logo {
+        width: 53px;
+        height: 54px;
+    }
+
+    .filter_dropdown,
+    .sort_dropdown {
+        top: 32px;
+    }
+
+    .footer_left_wrapper {
+        gap: 111px;
+    }
+}
+
+@media (max-width: 1023px) {
+
+    .nav_catalog_collections_panel,
+    .nav_catalog_dresses_panel {
+        width: 736px;
+        padding: 24px 0;
+    }
+
+    .catalog_name {
+        font-size: 100px;
+    }
+
+    .catalog_nav_list {
+        gap: 24px;
+    }
+
+    .card {
+        max-width: 360px;
+    }
+
+    .card_img_wrapper,
+    .card_img {
+        height: 540px;
+    }
+
+    .load_btn {
+        margin-right: 51px;
+        padding: 9px 130px;
+    }
+
+    .catalog_content_second {
+        padding-bottom: 100px;
+    }
+
+}
+
+
+
+@media (max-width: 767px) {
+
+    .nav_catalog_collections_panel,
+    .nav_catalog_dresses_panel {
+        width: 414px;
+        padding: 16px 0;
+        top: 64px;
+    }
+
+    .catalog_name {
+        font-size: 52px;
+    }
+
+    .catalog_greek_name {
+        font-size: 12px;
+    }
+
+    .catalog_nav_list {
+        gap: 16px;
+        flex-wrap: wrap;
+        row-gap: 8px;
+    }
+
+    .header_list {
+        margin-bottom: 8px;
+    }
+
+
+    .catalog_sort_btns_wrapper,
+    .catalog_cards_wrapper {
+        margin-bottom: 16px;
+    }
+
+    .card {
+        max-width: 203px;
+    }
+
+    .card_img_wrapper,
+    .card_img {
+        height: 304px;
+    }
+
+    .catalog_cards_wrapper {
+        row-gap: 16px;
+        column-gap: 8px;
+    }
+
+    .filter_btn,
+    .counter_box,
+    .card_name,
+    .card_price,
+    .card_price_non_sale,
+    .first_page,
+    .divider_page,
+    .last_page,
+    .filter_title,
+    .filter_column label,
+    .sort_option {
+        font-size: 14px;
+    }
+
+    .catalog_greek_name {
+        font-size: 12px;
+    }
+
+    .load_btn {
+        display: none;
+    }
+
+    .catalog_greek_name {
+        top: 20px;
+        right: -28px;
+    }
+
+    .card_price_wrapper {
+        gap: 4px;
+    }
+
+    .arrow_filter {
+        width: 8px;
+        height: 8px;
+    }
+
+    .filter_column input[type="checkbox"] {
+        width: 12px;
+        height: 12px;
+    }
+
+    .sort_check {
+        width: 10px;
+        height: 8px;
+    }
+
+    .card_img_wrapper {
+        margin-bottom: 4px;
+    }
+
+    .pages_wrapper {
+        gap: 4px;
+    }
+
+    .filter_btn {
+        gap: 4px;
+    }
+
+    .catalog_collections_list {
+        gap: 8px;
+    }
+
+    .catalog_collection_logo {
+        width: 35px;
+        height: 36px;
+    }
+
+    .catalog_logo_wrapper {
+        right: -29px;
+        top: -7px;
+    }
+
+    .filter_dropdown {
+        gap: 12px;
+        padding: 16px 8px;
+        top: 24px;
+    }
+
+    .filter_column label {
+        gap: 4px;
+        margin-bottom: 8px;
+    }
+
+    .arrow_pag_right,
+    .arrow_pag_left {
+        width: 40px;
+    }
+
+
+
+    .sort_dropdown {
+        width: 127px;
+        gap: 8px;
+        padding: 16px 8px;
+        top: 24px;
+    }
+
+    .pag_box {
+        gap: 8px;
+    }
+
+    .catalog_content_second {
+        padding-bottom: 80px;
+    }
+
+    .footer_left_wrapper {
+        gap: 24px;
+    }
+
+    .second_btn_wrapper {
+        gap: 12px;
+    }
+
+}
+
+@media (max-width: 429px) {
+
+    .catalog_name {
+        font-size: 48px;
+    }
+
+    .nav_catalog_collections_panel,
+    .nav_catalog_dresses_panel {
+        width: 359px;
+    }
+
+    .card {
+        max-width: 175px;
+    }
+
+    .card_img_wrapper,
+    .card_img {
+        height: 262px;
+    }
+
+}
+
+@media (max-width: 374px) {
+
+    .nav_catalog_collections_panel,
+    .nav_catalog_dresses_panel {
+        width: 274px;
+    }
+
+    .card {
+        max-width: 133px;
+    }
+
+    .card_img_wrapper,
+    .card_img {
+        height: 198px;
+    }
+
+    .catalog_name {
+        font-size: 40px;
+    }
+
+        .catalog_greek_name {
+            font-size: 10px;
+    }
+}

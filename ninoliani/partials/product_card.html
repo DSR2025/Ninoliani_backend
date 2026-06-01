@@ -1,0 +1,26 @@
+{% for product in products %}
+<div class="card">
+    <a href="{% url 'product_detail' product.slug %}">
+        <div class="card_img_wrapper">
+            {% with main_image=product.main_image %}
+                {% if main_image %}
+                <img class="card_img" src="{{ main_image.image.url }}" alt="{{ main_image.alt_text|default:product.name }}" loading="lazy" decoding="async">
+                {% endif %}
+            {% endwith %}
+        </div>
+        <div class="card_name_wrapper">
+            <h3 class="card_name">{{ product.name }}</h3>
+        </div>
+        <div class="card_price_wrapper">
+            {% if product.discount_price %}
+            <span class="card_price">${{ product.discount_price }}</span>
+            <span class="card_price_non_sale">${{ product.price }}</span>
+            {% else %}
+            <span class="card_price">${{ product.price }}</span>
+            {% endif %}
+        </div>
+    </a>
+</div>
+{% empty %}
+<p>No products found</p>
+{% endfor %}
