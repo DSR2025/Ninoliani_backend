@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Something went wrong | Nino Liani</title>
+  <meta name="robots" content="noindex">
+  <link rel="preload" href="{% static 'fonts/Cormorant_Infant/CormorantInfant-Light.ttf' %}" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="{% static 'css/normilize.css' %}">
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <link rel="stylesheet" href="{% static 'css/error.css' %}">
+</head>
+
+<body class="error_page_body">
+  <main class="error_page_main">
+    <div class="container error_page_container">
+      <h1 class="error_page_title">
+        <span>Oops...</span>
+        <span>Something went wrong.</span>
+      </h1>
+      <p class="error_page_description">
+        The page you are looking for is unavailable, has been moved or does not exist.
+      </p>
+      <a class="error_page_button" href="{% url 'home' %}">
+        <span>BACK TO HOME</span>
+        <svg width="41" height="6" viewBox="0 0 41 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0.5 2.38672C0.223858 2.38672 0 2.61058 0 2.88672C0 3.16286 0.223858 3.38672 0.5 3.38672L0.5 2.88672L0.5 2.38672ZM40.5 2.88672L35.5 0L35.5 5.77347L40.5 2.88672ZM0.5 2.88672L0.5 3.38672L36 3.38672L36 2.88672L36 2.38672L0.5 2.38672Z" fill="currentColor" />
+        </svg>
+      </a>
+    </div>
+  </main>
+</body>
+
+</html>

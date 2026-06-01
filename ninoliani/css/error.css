@@ -1,0 +1,141 @@
+.error_page_body {
+    min-height: 100vh;
+    color: #161616;
+    background: #F9F9F9;
+}
+
+.error_page_main {
+    display: flex;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    padding: 64px 0;
+}
+
+.error_page_container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.error_page_title {
+    display: flex;
+    max-width: 1060px;
+    margin: 0;
+    flex-direction: column;
+    font-family: "Waterfall", serif;
+    font-size: 148px;
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 0.82;
+}
+
+.error_page_description {
+    max-width: 580px;
+    margin: 48px 0 0;
+    color: #7F7F7F;
+    font-size: 22px;
+    font-weight: 300;
+    line-height: 1.35;
+}
+
+.error_page_button {
+    display: inline-flex;
+    margin-top: 48px;
+    align-items: center;
+    gap: 20px;
+    border: 1px solid #161616;
+    padding: 14px 28px;
+    color: #161616;
+    font-size: 18px;
+    font-weight: 300;
+    letter-spacing: 0.12em;
+    line-height: 1.4;
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
+}
+
+.error_page_button svg {
+    transition: transform 0.3s ease;
+}
+
+.error_page_button:hover {
+    color: #F9F9F9;
+    background-color: #161616;
+}
+
+.error_page_button:hover svg {
+    transform: translateX(6px);
+}
+
+@media (max-width: 1439px) {
+    .error_page_title {
+        font-size: 132px;
+    }
+}
+
+@media (max-width: 1279px) {
+    .error_page_main {
+        padding: 56px 0;
+    }
+
+    .error_page_title {
+        font-size: 116px;
+    }
+
+    .error_page_description {
+        margin-top: 40px;
+        font-size: 20px;
+    }
+
+    .error_page_button {
+        margin-top: 40px;
+    }
+}
+
+@media (max-width: 1023px) {
+    .error_page_title {
+        font-size: 104px;
+    }
+}
+
+@media (max-width: 767px) {
+    .error_page_main {
+        padding: 48px 0;
+    }
+
+    .error_page_title {
+        font-size: 78px;
+        line-height: 0.88;
+    }
+
+    .error_page_description {
+        max-width: 430px;
+        margin-top: 32px;
+        font-size: 18px;
+    }
+
+    .error_page_button {
+        margin-top: 32px;
+        gap: 16px;
+        padding: 12px 20px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 429px) {
+    .error_page_main {
+        padding: 40px 0;
+    }
+
+    .error_page_title {
+        font-size: 62px;
+    }
+
+    .error_page_description {
+        font-size: 16px;
+    }
+}

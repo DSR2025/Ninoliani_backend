@@ -1,5 +1,6 @@
 import logging
 
+from django.core.exceptions import PermissionDenied
 from django.core.paginator import InvalidPage, Paginator
 from django.conf import settings
 from django.core.mail import send_mail
@@ -14,6 +15,16 @@ from .models import Category, Collection, Product
 
 
 logger = logging.getLogger(__name__)
+
+
+def error_page_view(request, exception=None):
+    status = 500
+    if isinstance(exception, Http404):
+        status = 404
+    elif isinstance(exception, PermissionDenied):
+        status = 403
+
+    return render(request, "error.html", status=status)
 
 
 def home_view(request):
