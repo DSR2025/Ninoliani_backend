@@ -44,11 +44,25 @@ class Category(models.Model):
 class Collection(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True, blank=True, allow_unicode=True)
+    greek_title = models.CharField(max_length=255, blank=True)
+    logo_image = models.ImageField(
+        upload_to="collections/logos/",
+        blank=True,
+        null=True,
+    )
+    main_image = models.ImageField(
+        upload_to="collections/images/",
+        blank=True,
+        null=True,
+    )
     description = models.TextField(blank=True)
+    is_active = models.BooleanField(default=True)
+    sort_order = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ("name",)
+        ordering = ("sort_order", "name")
 
     def save(self, *args, **kwargs):
         if not self.slug:

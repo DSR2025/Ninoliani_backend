@@ -17,9 +17,10 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Collection)
 class CollectionAdmin(admin.ModelAdmin):
-    list_display = ("name", "created_at")
+    list_display = ("name", "slug", "is_active", "sort_order")
+    list_filter = ("is_active",)
     prepopulated_fields = {"slug": ("name",)}
-    search_fields = ("name",)
+    search_fields = ("name", "slug", "greek_title")
 
 
 @admin.register(Product)

@@ -261,8 +261,9 @@ form?.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const checkbox = document.getElementById("checkbox");
+  const submitBtn = form.querySelector('button[type="submit"]');
 
-  if (!checkbox.checked) {
+  if (!checkbox?.checked) {
     alert("Accept terms");
     return;
   }
@@ -270,24 +271,32 @@ form?.addEventListener("submit", async (e) => {
   const formData = new FormData(form);
 
   try {
-    const res = await fetch("send.php", {
+    if (submitBtn) submitBtn.disabled = true;
+
+    const res = await fetch(form.action, {
       method: "POST",
       body: formData
     });
 
     const data = await res.json();
 
-    if (data.status === "success") {
+    if (res.ok && data.ok === true) {
       openModal(); // Show success modal
       form.reset();
     } else {
-      alert("Error ❌: " + (data.message || "unknown error"));
+      const message = data.errors
+        ? Object.values(data.errors).join("\n")
+        : "Unable to send your message. Please try again.";
+
+      alert(message);
       console.log("SERVER ERROR:", data);
     }
 
   } catch (err) {
-    alert("Network error ❌");
+    alert("Unable to send your message. Please try again.");
     console.log("FETCH ERROR:", err);
+  } finally {
+    if (submitBtn) submitBtn.disabled = false;
   }
 });
 

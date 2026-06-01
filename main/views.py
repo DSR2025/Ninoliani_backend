@@ -1,14 +1,75 @@
 from django.core.paginator import InvalidPage, Paginator
+from django.conf import settings
+from django.core.mail import send_mail
 from django.db.models.functions import Coalesce
 from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.template.loader import render_to_string
+from django.views.decorators.http import require_POST
 
+from .forms import ContactForm
 from .models import Category, Collection, Product
 
 
 def home_view(request):
-    return render(request, "index.html")
+    collections = Collection.objects.filter(is_active=True).order_by(
+        "sort_order",
+        "name",
+    )
+    return render(request, "index.html", {"collections": collections})
+
+
+@require_POST
+def contact_view(request):
+    form = ContactForm(request.POST)
+
+    if not form.is_valid():
+        return JsonResponse(
+            {
+                "ok": False,
+                "errors": {
+                    field: errors[0]
+                    for field, errors in form.errors.items()
+                },
+            },
+            status=400,
+        )
+
+    data = form.cleaned_data
+    message = "\n".join(
+        [
+            f"Name: {data['fullName']}",
+            f"Phone: {data['phone']}",
+            f"Email: {data['email']}",
+            f"Comment: {data['comment']}",
+        ]
+    )
+
+    try:
+        send_mail(
+            subject="New contact request from Ninoliani",
+            message=message,
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[settings.CONTACT_EMAIL_TO],
+            fail_silently=False,
+        )
+    except Exception:
+        return JsonResponse(
+            {
+                "ok": False,
+                "errors": {
+                    "form": "Unable to send your message right now. Please try again later."
+                },
+            },
+            status=502,
+        )
+
+    return JsonResponse(
+        {
+            "ok": True,
+            "message": "Message sent successfully",
+        }
+    )
 
 
 def unique_nonempty_values(values):
@@ -44,7 +105,7 @@ def catalog_view(request):
     if category_slug and collection_slug:
         raise Http404
 
-    collections = Collection.objects.all().order_by("name")
+    collections = Collection.objects.filter(is_active=True).order_by("sort_order", "name")
     active_category_slug = ""
     active_collection_slug = ""
 
@@ -53,7 +114,7 @@ def catalog_view(request):
         products = Product.objects.filter(collection=collection, is_active=True)
         active_collection_slug = collection.slug
         catalog_title = collection.name
-        catalog_subtitle = "Ύδρα" if collection.slug == "hydra" else ""
+        catalog_subtitle = collection.greek_title
     else:
         category = get_object_or_404(Category, slug=category_slug or "new-arrivals")
         if category.slug == "collections" or category.children.exists():

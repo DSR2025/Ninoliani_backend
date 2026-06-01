@@ -1,6 +1,14 @@
 /**************************************/
 
 @font-face {
+	font-family: 'Greek Collection Font';
+	src: url('../fonts/GFSDidot/GFSDidot.ttf') format('truetype');
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+}
+
+@font-face {
 	font-family: 'Cormorant Infant';
 	src: url('../fonts/Cormorant_Infant/CormorantInfant-Light.ttf') format('truetype');
 	font-weight: 300;
@@ -792,6 +800,7 @@ p {
 }
 
 .collections_logo_title_greek {
+	font-family: 'Greek Collection Font', serif;
 	position: absolute;
 	top: 8px;
 	right: -34px;
