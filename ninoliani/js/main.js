@@ -185,8 +185,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const inputs = document.querySelectorAll(".connections_form_input");
 
   const validators = {
-    text: (v) => v.trim().length >= 2,
-    tel: (v) => v.trim().length >= 6,
+    text: (v) => {
+      const value = v.trim();
+      return value.length >= 2 && value.length <= 100 && /\p{L}/u.test(value);
+    },
+    tel: (v) => /^[0-9+\-\s()]{6,30}$/.test(v.trim()),
     email: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)
   };
 
@@ -278,7 +281,13 @@ form?.addEventListener("submit", async (e) => {
       body: formData
     });
 
-    const data = await res.json();
+    let data;
+
+    try {
+      data = await res.json();
+    } catch {
+      throw new Error(`Invalid server response: ${res.status}`);
+    }
 
     if (res.ok && data.ok === true) {
       openModal(); // Show success modal
@@ -286,7 +295,7 @@ form?.addEventListener("submit", async (e) => {
     } else {
       const message = data.errors
         ? Object.values(data.errors).join("\n")
-        : "Unable to send your message. Please try again.";
+        : data.error || "Unable to send your message. Please try again.";
 
       alert(message);
       console.log("SERVER ERROR:", data);

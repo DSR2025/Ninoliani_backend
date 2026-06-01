@@ -2,6 +2,7 @@ from django.contrib.staticfiles import finders
 from django.core import mail
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
+from unittest.mock import patch
 
 
 @override_settings(
@@ -61,6 +62,61 @@ class ContactViewTests(TestCase):
         self.assertIn("comment", errors)
         self.assertIn("consent", errors)
         self.assertEqual(mail.outbox, [])
+
+    def test_phone_with_letters_is_rejected(self):
+        data = {**self.valid_data, "phone": "qwerty123abc"}
+
+        response = self.client.post(self.url, data)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("phone", response.json()["errors"])
+        self.assertEqual(mail.outbox, [])
+
+    def test_invalid_email_is_rejected(self):
+        data = {**self.valid_data, "email": "test@"}
+
+        response = self.client.post(self.url, data)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("email", response.json()["errors"])
+        self.assertEqual(mail.outbox, [])
+
+    def test_name_without_letters_is_rejected(self):
+        data = {**self.valid_data, "fullName": "123456"}
+
+        response = self.client.post(self.url, data)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("fullName", response.json()["errors"])
+        self.assertEqual(mail.outbox, [])
+
+    @patch("main.views.send_mail", side_effect=RuntimeError("SMTP unavailable"))
+    def test_email_failure_returns_safe_json_error(self, mocked_send_mail):
+        response = self.client.post(self.url, self.valid_data)
+
+        self.assertEqual(response.status_code, 500)
+        self.assertJSONEqual(
+            response.content,
+            {
+                "ok": False,
+                "error": "Email sending failed",
+            },
+        )
+        mocked_send_mail.assert_called_once()
+
+    @patch("main.views.send_mail", return_value=0)
+    def test_unsent_email_returns_safe_json_error(self, mocked_send_mail):
+        response = self.client.post(self.url, self.valid_data)
+
+        self.assertEqual(response.status_code, 500)
+        self.assertJSONEqual(
+            response.content,
+            {
+                "ok": False,
+                "error": "Email sending failed",
+            },
+        )
+        mocked_send_mail.assert_called_once()
 
     def test_csrf_token_is_required(self):
         csrf_client = Client(enforce_csrf_checks=True)

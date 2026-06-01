@@ -1,12 +1,11 @@
 {% for product in products %}
 <div class="card">
+    {% with images=product.images.all %}
     <a href="{% url 'product_detail' product.slug %}">
         <div class="card_img_wrapper">
-            {% with main_image=product.main_image %}
-                {% if main_image %}
-                <img class="card_img" src="{{ main_image.image.url }}" alt="{{ main_image.alt_text|default:product.name }}" loading="lazy" decoding="async">
-                {% endif %}
-            {% endwith %}
+            {% for image in images %}
+            <img class="card_img catalog_card_gallery_image" src="{{ image.image.url }}" alt="{{ image.alt_text|default:product.name }}" loading="lazy" decoding="async">
+            {% endfor %}
         </div>
         <div class="card_name_wrapper">
             <h3 class="card_name">{{ product.name }}</h3>
@@ -20,6 +19,7 @@
             {% endif %}
         </div>
     </a>
+    {% endwith %}
 </div>
 {% empty %}
 <p>No products found</p>

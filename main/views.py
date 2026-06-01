@@ -1,3 +1,5 @@
+import logging
+
 from django.core.paginator import InvalidPage, Paginator
 from django.conf import settings
 from django.core.mail import send_mail
@@ -9,6 +11,9 @@ from django.views.decorators.http import require_POST
 
 from .forms import ContactForm
 from .models import Category, Collection, Product
+
+
+logger = logging.getLogger(__name__)
 
 
 def home_view(request):
@@ -46,22 +51,24 @@ def contact_view(request):
     )
 
     try:
-        send_mail(
+        sent_messages = send_mail(
             subject="New contact request from Ninoliani",
             message=message,
             from_email=settings.EMAIL_HOST_USER,
             recipient_list=[settings.CONTACT_EMAIL_TO],
             fail_silently=False,
         )
-    except Exception:
+        if sent_messages != 1:
+            raise RuntimeError("Contact email was not sent")
+    except Exception as error:
+        print("CONTACT EMAIL ERROR:", type(error).__name__, str(error), flush=True)
+        logger.exception("Contact email sending failed")
         return JsonResponse(
             {
                 "ok": False,
-                "errors": {
-                    "form": "Unable to send your message right now. Please try again later."
-                },
+                "error": "Email sending failed",
             },
-            status=502,
+            status=500,
         )
 
     return JsonResponse(

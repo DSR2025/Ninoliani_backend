@@ -1,5 +1,5 @@
-{% load static %}
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 
 <head>
@@ -17,7 +17,7 @@
     <link rel="preload" href="{% static 'css/styles.css' %}" as="style">
     <link rel="preload" href="{% static 'css/catalog.css' %}" as="style">
     <link rel="preload" href="{% static 'fonts/Cormorant_Infant/CormorantInfant-Light.ttf' %}" as="font" type="font/ttf" crossorigin>
-    <link rel="preload" href="{% static 'fonts/Waterfall/Waterfall-Regular.ttf' %}" as="font" type="font/ttf" crossorigin>
+    <link rel="preload" href="{% static 'fonts/waterfall/Waterfall-Regular.ttf' %}" as="font" type="font/ttf" crossorigin>
     <link rel="stylesheet" href="{% static 'css/normilize.css' %}">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="stylesheet" href="{% static 'css/media.css' %}">
@@ -282,8 +282,13 @@
                 </div>
                 {% if is_paginated %}
                 <div class="catalog_pagination_wrapper">
+                    {% if page_obj.has_next %}
                     <button class="btn-reset load_btn" type="button"
-                        data-next-url="{{ next_page_url }}"{% if not page_obj.has_next %} disabled{% endif %}>LOAD MORE</button>
+                        data-next-url="{{ next_page_url }}">LOAD MORE</button>
+                    {% else %}
+                    <button class="btn-reset load_btn" type="button"
+                        data-next-url="" disabled>LOAD MORE</button>
+                    {% endif %}
                     <div class="pag_box">
                         <a class="pagination_left" href="{% if page_obj.has_previous %}?{{ pagination_query_prefix }}page={{ page_obj.previous_page_number }}{% else %}#{% endif %}">
                             <svg class="arrow_pag_left" width="40" height="6" viewBox="0 0 40 6" fill="none"
