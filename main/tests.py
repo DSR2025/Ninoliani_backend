@@ -4,21 +4,32 @@ from django.test import Client, TestCase, override_settings
 from django.urls import reverse
 from unittest.mock import patch
 
+from .views import verify_turnstile_token
+
 
 @override_settings(
     EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
     EMAIL_HOST_USER="sender@example.com",
     CONTACT_EMAIL_TO="contact@example.com",
+    TURNSTILE_SITE_KEY="test-site-key",
+    TURNSTILE_SECRET_KEY="test-secret-key",
 )
 class ContactViewTests(TestCase):
     def setUp(self):
         self.url = reverse("contact")
+        self.turnstile_patcher = patch(
+            "main.views.verify_turnstile_token",
+            return_value=True,
+        )
+        self.mocked_turnstile = self.turnstile_patcher.start()
+        self.addCleanup(self.turnstile_patcher.stop)
         self.valid_data = {
             "fullName": "Test User",
             "phone": "+1 555 123 4567",
             "email": "test@example.com",
             "comment": "Please contact me.",
             "consent": "on",
+            "cf-turnstile-response": "valid-token",
         }
 
     def test_get_is_not_allowed(self):
@@ -62,6 +73,38 @@ class ContactViewTests(TestCase):
         self.assertIn("comment", errors)
         self.assertIn("consent", errors)
         self.assertEqual(mail.outbox, [])
+
+    def test_missing_captcha_token_is_rejected(self):
+        self.mocked_turnstile.return_value = False
+        data = {**self.valid_data}
+        data.pop("cf-turnstile-response")
+
+        response = self.client.post(self.url, data)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json()["errors"]["captcha"],
+            "Please complete the captcha.",
+        )
+        self.assertEqual(mail.outbox, [])
+
+    def test_invalid_captcha_token_is_rejected(self):
+        self.mocked_turnstile.return_value = False
+        data = {**self.valid_data, "cf-turnstile-response": "invalid-token"}
+
+        response = self.client.post(self.url, data)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("captcha", response.json()["errors"])
+        self.assertEqual(mail.outbox, [])
+
+    @override_settings(DEBUG=True, TURNSTILE_SECRET_KEY="")
+    def test_turnstile_can_be_bypassed_locally_when_not_configured(self):
+        self.assertTrue(verify_turnstile_token(""))
+
+    @override_settings(DEBUG=False, TURNSTILE_SECRET_KEY="")
+    def test_turnstile_cannot_be_bypassed_in_production(self):
+        self.assertFalse(verify_turnstile_token(""))
 
     def test_phone_with_letters_is_rejected(self):
         data = {**self.valid_data, "phone": "qwerty123abc"}

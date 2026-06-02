@@ -115,6 +115,15 @@ a {
 	transition: 0.3s ease-in-out;
 }
 
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+	outline: 1px solid #161616;
+	outline-offset: 4px;
+}
+
 img {
 	max-width: 100%;
 }
@@ -690,6 +699,9 @@ p {
 .arrow_right {
 	display: flex;
 	align-items: first baseline;
+	padding: 0;
+	border: 0;
+	background: transparent;
 	cursor: pointer;
 	user-select: none;
 	font-size: 30px;
@@ -718,6 +730,9 @@ p {
 	position: absolute;
 	top: 50%;
 	transform: translateY(-50%);
+	padding: 0;
+	border: 0;
+	background: transparent;
 	font-size: 60px;
 	color: white;
 	cursor: pointer;
@@ -1276,6 +1291,105 @@ p {
 
 .powered{
 	margin-top: 16px;
+}
+
+.captcha_modal {
+	position: fixed;
+	inset: 0;
+	z-index: 1450;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 24px;
+	visibility: hidden;
+	opacity: 0;
+	transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.captcha_modal.active {
+	visibility: visible;
+	opacity: 1;
+}
+
+.captcha_modal_overlay {
+	position: absolute;
+	inset: 0;
+	background: rgba(22, 22, 22, 0.42);
+	backdrop-filter: blur(4px);
+}
+
+.captcha_modal_content {
+	position: relative;
+	z-index: 1;
+	width: min(100%, 440px);
+	padding: 36px;
+	background: #F9F9F9;
+	color: #161616;
+	text-align: center;
+	transform: translateY(24px) scale(0.98);
+	transition: transform 0.3s ease;
+}
+
+.captcha_modal.active .captcha_modal_content {
+	transform: translateY(0) scale(1);
+}
+
+.captcha_modal_close {
+	position: absolute;
+	top: 12px;
+	right: 16px;
+	color: #161616;
+	font-size: 32px;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.captcha_modal_title {
+	margin: 0;
+	font-family: "Cormorant Infant", serif;
+	font-size: 34px;
+	font-weight: 300;
+	line-height: 1.1;
+}
+
+.captcha_modal_text {
+	margin: 12px 0 24px;
+	font-size: 16px;
+	line-height: 1.4;
+}
+
+.captcha_modal .cf-turnstile {
+	display: flex;
+	justify-content: center;
+}
+
+@media (max-width: 767px) {
+	.captcha_modal {
+		padding: 16px;
+	}
+
+	.captcha_modal_content {
+		padding: 32px 20px 24px;
+	}
+}
+
+@media (max-width: 374px) {
+	.captcha_modal {
+		padding: 8px;
+	}
+
+	.captcha_modal_content {
+		padding: 30px 10px 20px;
+	}
+
+	.captcha_modal_title {
+		font-size: 30px;
+	}
+
+	.captcha_modal_text {
+		margin-bottom: 18px;
+		font-size: 14px;
+	}
 }
 
 /* Motion */

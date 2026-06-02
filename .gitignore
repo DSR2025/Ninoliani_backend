@@ -23,3 +23,6 @@ media/
 
 # Composer
 ninoliani/vendor/
+
+# Developer documentation
+project_docs/

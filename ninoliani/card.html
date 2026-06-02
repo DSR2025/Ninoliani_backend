@@ -6,16 +6,18 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ product.name }} | Nino Liani Product</title>
-    <meta name="description"
-        content="{{ product.description }}">
-    <meta property="og:title" content="{{ product.name }} | Nino Liani Product">
-    <meta property="og:description"
-        content="{{ product.description }}">
-    {% if main_image %}
-    <meta property="og:image" content="{{ main_image.image.url }}">
+    <title>{{ product.name }} | Ninoliani</title>
+    <meta name="description" content="{{ seo_description }}">
+    <link rel="canonical" href="{{ canonical_url }}">
+    <meta property="og:title" content="{{ product.name }}">
+    <meta property="og:description" content="{{ seo_description }}">
+    {% if seo_image_url %}
+    <meta property="og:image" content="{{ seo_image_url }}">
     {% endif %}
     <meta property="og:type" content="product">
+    <meta property="og:site_name" content="Ninoliani">
+    <meta name="twitter:card" content="summary_large_image">
+    <script type="application/ld+json">{{ product_schema_json|safe }}</script>
     <link rel="preload" href="{% static 'css/styles.css' %}" as="style">
     <link rel="preload" href="{% static 'css/card.css' %}" as="style">
     {% if main_image %}
@@ -27,6 +29,7 @@
     <link rel="stylesheet" href="{% static 'css/media.css' %}">
     <link rel="stylesheet" href="{% static 'css/card.css' %}">
     <link rel="stylesheet" href="{% static 'css/card_media.css' %}">
+    <link rel="stylesheet" href="{% static 'css/cookie.css' %}">
 </head>
 
 <body>
@@ -35,10 +38,10 @@
             <div class="header_content">
                 <ul class="header_list list--reset">
                     <li class="header_list_item header_list_item_custom">
-                        <a class="header_link" href="">MENU</a>
+                        <a class="header_link" href="#" role="button" aria-label="Open menu" aria-expanded="false" aria-controls="side-menu">MENU</a>
                     </li>
                     <li class="header_list_item">
-                        <a class="header_link_logo" href="{% url 'home' %}"><svg class="header_logo_svg" width="686" height="330"
+                        <a class="header_link_logo" href="{% url 'home' %}" aria-label="Ninoliani home"><svg class="header_logo_svg" width="686" height="330" aria-hidden="true" focusable="false"
                                 viewBox="0 0 686 330" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path
                                     d="M527.319 213.18C545.154 216.223 561.096 216.537 571.789 214.126C577.919 212.764 584.471 209.567 589.752 205.766C592.392 203.866 594.715 201.816 596.507 199.77C598.187 197.852 599.4 195.94 599.975 194.161L600.081 193.806C600.658 191.761 600.991 190.217 601.091 189.176C601.141 188.654 601.131 188.264 601.067 188.001C601.003 187.737 600.889 187.619 600.742 187.603C600.665 187.595 600.57 187.613 600.457 187.664C600.344 187.715 600.215 187.797 600.071 187.912C599.783 188.142 599.438 188.499 599.036 188.985C598.233 189.956 597.212 191.436 595.979 193.428H595.979C588.835 204.879 578.224 211.813 564.674 213.914H564.673C558.737 214.807 549.472 214.491 538.689 213.179C528.58 211.95 517.132 209.843 505.84 207.034L503.583 206.463C498.072 205.046 484.273 200.796 471.722 196.769C465.445 194.756 459.48 192.798 455.019 191.278C452.788 190.518 450.933 189.867 449.603 189.374C448.937 189.127 448.403 188.919 448.018 188.757C447.825 188.675 447.669 188.606 447.553 188.548C447.439 188.491 447.357 188.441 447.317 188.401L447.316 188.402L447.311 188.393C447.296 188.372 447.292 188.346 447.291 188.323C447.29 188.299 447.294 188.272 447.3 188.243C447.312 188.185 447.336 188.11 447.37 188.022C447.439 187.846 447.552 187.607 447.705 187.313C448.011 186.725 448.477 185.911 449.067 184.927C450.248 182.959 451.927 180.308 453.816 177.423C466.509 158.226 476.791 134.832 491.061 93.281C504.387 54.5606 513.414 36.8186 527.482 21.5955C533.414 15.1918 538.876 10.9102 544.879 8.30933C550.882 5.70844 557.422 4.79026 565.507 5.10522C573.17 5.42015 578.952 6.75892 582.819 9.12671C586.69 11.4968 588.642 14.8971 588.642 19.323C588.642 23.38 586.352 28.2708 582.729 32.8259C579.104 37.3826 574.14 41.6107 568.781 44.3425V44.3435C566.319 45.5487 564.649 46.8285 563.844 48.0496C563.442 48.6593 563.256 49.2519 563.291 49.8113C563.326 50.3694 563.581 50.9017 564.071 51.3923C564.198 51.5073 564.414 51.5477 564.724 51.5017C565.031 51.4559 565.419 51.3264 565.875 51.1208C566.787 50.7097 567.961 49.997 569.291 49.0535C571.951 47.1668 575.228 44.3624 578.269 41.2166C585.924 33.3514 589.586 26.2287 589.586 19.113C589.586 15.3956 588.827 12.4689 587.091 9.98804C585.353 7.50614 582.634 5.46441 578.703 3.52515H578.702C575.923 2.10941 574.092 1.32503 571.646 0.854248C569.505 0.441917 566.89 0.269712 562.755 0.127686L560.887 0.0681152C553.752 -0.0367772 547.147 0.383804 543.797 1.22144H543.798C529.753 4.78508 518.85 13.2743 508.887 28.2712H508.886C500.706 40.8551 497.876 47.88 488.433 80.0916C475.631 123.848 472.796 132.139 464.506 151.869C462.354 157.013 458.891 163.966 455.467 170.25C452.044 176.532 448.657 182.15 446.66 184.62L444.353 187.557L444.332 187.583L444.301 187.576L431.919 184.953C421.06 182.645 413.302 181.807 407.619 182.58C401.941 183.352 398.335 185.731 395.773 189.861C393.234 193.997 392.458 197.946 393.024 201.395C393.591 204.845 395.502 207.801 398.345 209.951C404.031 214.252 413.453 215.329 423.303 210.667H423.304C428.9 208.114 433.211 204.365 440.903 195.606L442.488 193.786L445.636 190.219L445.659 190.192L445.691 190.203L472.239 198.807L472.238 198.808C501.355 208.153 506.493 209.658 523.705 212.576L527.319 213.18ZM424.401 205.513C417.303 209.615 409.334 208.985 404.49 206.051C402.068 204.583 400.422 202.535 400.064 200.208C399.707 197.879 400.642 195.286 403.353 192.733C405.987 190.256 410.329 188.628 415.764 187.906C421.2 187.184 427.737 187.367 434.771 188.522L434.771 188.523C436.45 188.786 438.052 189.1 439.287 189.402C439.904 189.553 440.431 189.701 440.83 189.838C441.029 189.906 441.198 189.972 441.33 190.034C441.461 190.096 441.561 190.156 441.62 190.216C441.701 190.296 441.702 190.42 441.662 190.556C441.621 190.695 441.532 190.866 441.404 191.064C441.148 191.461 440.724 191.976 440.173 192.577C439.069 193.779 437.448 195.328 435.611 196.955C431.938 200.208 427.396 203.779 424.401 205.513Z"
@@ -92,7 +95,7 @@
     </header>
     <div class="menu_overlay"></div>
 
-    <nav class="side_menu">
+    <nav class="side_menu" id="side-menu">
         <ul class="list--reset footer_nav_list">
             <li class="nav_list_item burger_link_menu">
                 <a class="footer_nav_link header_link" href="{% url 'catalog' %}">CATALOG</a>
@@ -144,15 +147,15 @@
                         </div>
                         <p class="main_card_preorder">Pre-order only. Contact to order:</p>
                         <div class="main_card_btns_wrapper">
-                            <button class="main_card_btn btn-reset">WHATSAPP</button>
-                            <button class="main_card_btn btn-reset">E-MAIL</button>
+                            <a class="main_card_btn btn-reset" href="https://wa.me/13474457171" target="_blank" rel="noopener noreferrer">WHATSAPP</a>
+                            <a class="main_card_btn btn-reset" href="mailto:Ninolianicustom@gmail.com">E-MAIL</a>
                         </div>
                     </div>
                     <div class="main_card_second_wrapper">
                         <div class="main_card_description_wrapper size">
                             <button class="main_card_descr_btn btn-reset">
                                 <span class="main_card_btn_text">SIZE</span>
-                                <svg class="main_card_arrow_svg" width="9" height="8" viewBox="0 0 9 8" fill="none"
+                                <svg class="main_card_arrow_svg" width="9" height="8" viewBox="0 0 9 8" fill="none" aria-hidden="true" focusable="false"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path d="M4.33008 7.5L-4.89354e-05 1.38009e-07L8.66021 8.95112e-07L4.33008 7.5Z"
                                         fill="#161616" />
@@ -163,7 +166,7 @@
                         <div class="main_card_description_wrapper size">
                             <button class="main_card_descr_btn btn-reset">
                                 <span class="main_card_btn_text">Description</span>
-                                <svg class="main_card_arrow_svg" width="9" height="8" viewBox="0 0 9 8" fill="none"
+                                <svg class="main_card_arrow_svg" width="9" height="8" viewBox="0 0 9 8" fill="none" aria-hidden="true" focusable="false"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path d="M4.33008 7.5L-4.89354e-05 1.38009e-07L8.66021 8.95112e-07L4.33008 7.5Z"
                                         fill="#161616" />
@@ -174,7 +177,7 @@
                         <div class="main_card_description_wrapper size">
                             <button class="main_card_descr_btn btn-reset">
                                 <span class="main_card_btn_text">Material</span>
-                                <svg class="main_card_arrow_svg" width="9" height="8" viewBox="0 0 9 8" fill="none"
+                                <svg class="main_card_arrow_svg" width="9" height="8" viewBox="0 0 9 8" fill="none" aria-hidden="true" focusable="false"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path d="M4.33008 7.5L-4.89354e-05 1.38009e-07L8.66021 8.95112e-07L4.33008 7.5Z"
                                         fill="#161616" />
@@ -186,7 +189,7 @@
                             <button class="main_card_descr_btn btn-reset">
                                 <span class="main_card_btn_text">Size Guide</span>
 
-                                <svg class="main_card_arrow_svg" width="9" height="8" viewBox="0 0 9 8" fill="none"
+                                <svg class="main_card_arrow_svg" width="9" height="8" viewBox="0 0 9 8" fill="none" aria-hidden="true" focusable="false"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path d="M4.33008 7.5L-4.89354e-05 1.38009e-07L8.66021 8.95112e-07L4.33008 7.5Z"
                                         fill="#161616" />
@@ -348,12 +351,12 @@
 
                 </div>
             </div>
-            <div class="gallery_modal">
+            <div class="gallery_modal" role="dialog" aria-modal="true" aria-label="Product image gallery">
                 <div class="gallery_backdrop"></div>
 
-                <button class="gallery_close">×</button>
-                <button class="gallery_btn gallery_prev">‹</button>
-                <button class="gallery_btn gallery_next">›</button>
+                <button class="gallery_close" type="button" aria-label="Close product gallery">×</button>
+                <button class="gallery_btn gallery_prev" type="button" aria-label="Previous product image">‹</button>
+                <button class="gallery_btn gallery_next" type="button" aria-label="Next product image">›</button>
 
                 <div class="gallery_stage">
                     <img class="gallery_img" alt="{{ product.name }} product gallery image" decoding="async" />
@@ -370,8 +373,8 @@
                     <div class="footer_left_wrapper">
                         <div class="footer_top_wrapper">
                             <div class="footer_logo">
-                                <a class="header_link_logo" href="{% url 'home' %}">
-                                    <svg class="footer_logo_svg" width="686" height="330" viewBox="0 0 686 330"
+                                <a class="header_link_logo" href="{% url 'home' %}" aria-label="Ninoliani home">
+                                    <svg class="footer_logo_svg" width="686" height="330" viewBox="0 0 686 330" aria-hidden="true" focusable="false"
                                         fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path
                                             d="M527.319 213.18C545.154 216.223 561.096 216.537 571.789 214.126C577.919 212.764 584.471 209.567 589.752 205.766C592.392 203.866 594.715 201.816 596.507 199.77C598.187 197.852 599.4 195.94 599.975 194.161L600.081 193.806C600.658 191.761 600.991 190.217 601.091 189.176C601.141 188.654 601.131 188.264 601.067 188.001C601.003 187.737 600.889 187.619 600.742 187.603C600.665 187.595 600.57 187.613 600.457 187.664C600.344 187.715 600.215 187.797 600.071 187.912C599.783 188.142 599.438 188.499 599.036 188.985C598.233 189.956 597.212 191.436 595.979 193.428H595.979C588.835 204.879 578.224 211.813 564.674 213.914H564.673C558.737 214.807 549.472 214.491 538.689 213.179C528.58 211.95 517.132 209.843 505.84 207.034L503.583 206.463C498.072 205.046 484.273 200.796 471.722 196.769C465.445 194.756 459.48 192.798 455.019 191.278C452.788 190.518 450.933 189.867 449.603 189.374C448.937 189.127 448.403 188.919 448.018 188.757C447.825 188.675 447.669 188.606 447.553 188.548C447.439 188.491 447.357 188.441 447.317 188.401L447.316 188.402L447.311 188.393C447.296 188.372 447.292 188.346 447.291 188.323C447.29 188.299 447.294 188.272 447.3 188.243C447.312 188.185 447.336 188.11 447.37 188.022C447.439 187.846 447.552 187.607 447.705 187.313C448.011 186.725 448.477 185.911 449.067 184.927C450.248 182.959 451.927 180.308 453.816 177.423C466.509 158.226 476.791 134.832 491.061 93.281C504.387 54.5606 513.414 36.8186 527.482 21.5955C533.414 15.1918 538.876 10.9102 544.879 8.30933C550.882 5.70844 557.422 4.79026 565.507 5.10522C573.17 5.42015 578.952 6.75892 582.819 9.12671C586.69 11.4968 588.642 14.8971 588.642 19.323C588.642 23.38 586.352 28.2708 582.729 32.8259C579.104 37.3826 574.14 41.6107 568.781 44.3425V44.3435C566.319 45.5487 564.649 46.8285 563.844 48.0496C563.442 48.6593 563.256 49.2519 563.291 49.8113C563.326 50.3694 563.581 50.9017 564.071 51.3923C564.198 51.5073 564.414 51.5477 564.724 51.5017C565.031 51.4559 565.419 51.3264 565.875 51.1208C566.787 50.7097 567.961 49.997 569.291 49.0535C571.951 47.1668 575.228 44.3624 578.269 41.2166C585.924 33.3514 589.586 26.2287 589.586 19.113C589.586 15.3956 588.827 12.4689 587.091 9.98804C585.353 7.50614 582.634 5.46441 578.703 3.52515H578.702C575.923 2.10941 574.092 1.32503 571.646 0.854248C569.505 0.441917 566.89 0.269712 562.755 0.127686L560.887 0.0681152C553.752 -0.0367772 547.147 0.383804 543.797 1.22144H543.798C529.753 4.78508 518.85 13.2743 508.887 28.2712H508.886C500.706 40.8551 497.876 47.88 488.433 80.0916C475.631 123.848 472.796 132.139 464.506 151.869C462.354 157.013 458.891 163.966 455.467 170.25C452.044 176.532 448.657 182.15 446.66 184.62L444.353 187.557L444.332 187.583L444.301 187.576L431.919 184.953C421.06 182.645 413.302 181.807 407.619 182.58C401.941 183.352 398.335 185.731 395.773 189.861C393.234 193.997 392.458 197.946 393.024 201.395C393.591 204.845 395.502 207.801 398.345 209.951C404.031 214.252 413.453 215.329 423.303 210.667H423.304C428.9 208.114 433.211 204.365 440.903 195.606L442.488 193.786L445.636 190.219L445.659 190.192L445.691 190.203L472.239 198.807L472.238 198.808C501.355 208.153 506.493 209.658 523.705 212.576L527.319 213.18ZM424.401 205.513C417.303 209.615 409.334 208.985 404.49 206.051C402.068 204.583 400.422 202.535 400.064 200.208C399.707 197.879 400.642 195.286 403.353 192.733C405.987 190.256 410.329 188.628 415.764 187.906C421.2 187.184 427.737 187.367 434.771 188.522L434.771 188.523C436.45 188.786 438.052 189.1 439.287 189.402C439.904 189.553 440.431 189.701 440.83 189.838C441.029 189.906 441.198 189.972 441.33 190.034C441.461 190.096 441.561 190.156 441.62 190.216C441.701 190.296 441.702 190.42 441.662 190.556C441.621 190.695 441.532 190.866 441.404 191.064C441.148 191.461 440.724 191.976 440.173 192.577C439.069 193.779 437.448 195.328 435.611 196.955C431.938 200.208 427.396 203.779 424.401 205.513Z"
@@ -419,9 +422,9 @@
                         <div class="footer_bottom_wrapper">
                             <div class="footer_docs_wrapper">
                                 <div class="footer_docs_left">
-                                    <a class="footer_docs_link" href="">Privacy policy</a>
-                                    <a class="footer_docs_link" href="">General conditions of purchase </a>
-                                    <a class="footer_docs_link" href="">Terms & conditions</a>
+                                    <span class="footer_docs_link" aria-disabled="true">Privacy policy</span>
+                                    <span class="footer_docs_link" aria-disabled="true">General conditions of purchase </span>
+                                    <span class="footer_docs_link" aria-disabled="true">Terms & conditions</span>
                                     <a class="footer_docs_link powered" href="https://t.me/cast189">Powered by D&S studio</a>
                                 </div>
                                 <div class="footer_docs_right">
@@ -485,7 +488,7 @@
                             <nav class="nav_wrapper">
                                 <ul class="list--reset footer_nav_list">
                                     <li class="nav_list_item">
-                                        <a class="footer_nav_link header_link" href="">INSTAGRAM</a>
+                                        <span class="footer_nav_link header_link" aria-disabled="true">INSTAGRAM</span>
                                     </li>
                                 </ul>
                             </nav>
@@ -497,6 +500,8 @@
 
     </footer>
 
+    {% include "partials/cookie_banner.html" %}
+    <script defer src="{% static 'js/cookie.js' %}"></script>
     <script defer src="{% static 'js/card.js' %}"></script>
 
 </body>

@@ -3,12 +3,14 @@
 // =========================
 
 const menuBtn = document.querySelector(".header_list_item_custom");
+const menuToggle = menuBtn?.querySelector('[aria-controls="side-menu"]');
 const sideMenu = document.querySelector(".side_menu");
 const overlay = document.querySelector(".menu_overlay");
 
 const closeMenu = () => {
     sideMenu?.classList.remove("active");
     overlay?.classList.remove("active");
+    menuToggle?.setAttribute("aria-expanded", "false");
 };
 
 // Open menu
@@ -17,6 +19,7 @@ menuBtn?.addEventListener("click", (e) => {
 
     sideMenu?.classList.add("active");
     overlay?.classList.add("active");
+    menuToggle?.setAttribute("aria-expanded", "true");
 });
 
 // Close on overlay click
@@ -28,14 +31,17 @@ document.addEventListener("keydown", (e) => {
 
         sideMenu?.classList.remove("active");
         overlay?.classList.remove("active");
+        menuToggle?.setAttribute("aria-expanded", "false");
 
         // Close filter
         filterDropdown?.classList.remove("active");
         filterBtn?.classList.remove("active");
+        filterBtn?.setAttribute("aria-expanded", "false");
 
         // Close sort
         sortDropdown?.classList.remove("active");
         sortToggle?.classList.remove("active");
+        sortToggle?.setAttribute("aria-expanded", "false");
     }
 });
 
@@ -131,10 +137,15 @@ filterBtn?.addEventListener("click", (e) => {
 
     filterDropdown.classList.toggle("active");
     filterBtn.classList.toggle("active");
+    filterBtn.setAttribute(
+        "aria-expanded",
+        String(filterDropdown.classList.contains("active")),
+    );
 
     // Close sort if it is open
     sortDropdown?.classList.remove("active");
     sortToggle?.classList.remove("active");
+    sortToggle?.setAttribute("aria-expanded", "false");
 });
 
 // =========================
@@ -151,10 +162,15 @@ sortToggle?.addEventListener("click", (e) => {
 
     sortDropdown.classList.toggle("active");
     sortToggle.classList.toggle("active");
+    sortToggle.setAttribute(
+        "aria-expanded",
+        String(sortDropdown.classList.contains("active")),
+    );
 
     // Close filter if it is open
     filterDropdown?.classList.remove("active");
     filterBtn?.classList.remove("active");
+    filterBtn?.setAttribute("aria-expanded", "false");
 });
 
 // =========================
@@ -180,6 +196,7 @@ document.addEventListener("click", (e) => {
 
         filterDropdown?.classList.remove("active");
         filterBtn?.classList.remove("active");
+        filterBtn?.setAttribute("aria-expanded", "false");
     }
 
     // SORT
@@ -187,6 +204,7 @@ document.addEventListener("click", (e) => {
 
         sortDropdown?.classList.remove("active");
         sortToggle?.classList.remove("active");
+        sortToggle?.setAttribute("aria-expanded", "false");
     }
 
 });
@@ -208,6 +226,7 @@ const updateCatalogPagination = (data) => {
 
     if (paginationLeft) {
         paginationLeft.href = data.previous_page_url || "#";
+        paginationLeft.setAttribute("aria-disabled", String(!data.has_previous));
         paginationLeft.querySelector("path")?.setAttribute(
             "fill",
             data.has_previous ? "#161616" : "#C0C0C0",
@@ -216,6 +235,7 @@ const updateCatalogPagination = (data) => {
 
     if (paginationRight) {
         paginationRight.href = data.next_page_url || "#";
+        paginationRight.setAttribute("aria-disabled", String(!data.has_next));
         paginationRight.querySelector("path")?.setAttribute(
             "fill",
             data.has_next ? "#161616" : "#C0C0C0",

@@ -16,6 +16,11 @@ const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
 
 // Clone items for infinite scrolling
 const originals = Array.from(gallery.children);
+originals.forEach((el, index) => {
+  el.setAttribute("role", "button");
+  el.setAttribute("tabindex", "0");
+  el.setAttribute("aria-label", `Open portfolio image ${index + 1}`);
+});
 originals.forEach(el => {
   gallery.appendChild(el.cloneNode(true));
 });
@@ -59,6 +64,15 @@ leftBtn.addEventListener("mousedown", () => start(6));
 rightBtn.addEventListener("mousedown", () => start(-6));
 document.addEventListener("mouseup", stop);
 
+leftBtn.addEventListener("click", () => {
+  position += 40;
+  renderTrackPosition();
+});
+rightBtn.addEventListener("click", () => {
+  position -= 40;
+  renderTrackPosition();
+});
+
 leftBtn.addEventListener("touchstart", () => start(6));
 rightBtn.addEventListener("touchstart", () => start(-6));
 document.addEventListener("touchend", stop);
@@ -100,11 +114,14 @@ let currentIndex = 0;
 
 const lightbox = document.createElement("div");
 lightbox.classList.add("lightbox");
+lightbox.setAttribute("role", "dialog");
+lightbox.setAttribute("aria-modal", "true");
+lightbox.setAttribute("aria-label", "Portfolio image preview");
 
 lightbox.innerHTML = `
-  <span class="lb_prev">‹</span>
-  <img src="">
-  <span class="lb_next">›</span>
+  <button class="lb_prev" type="button" aria-label="Previous portfolio image">‹</button>
+  <img src="" alt="Portfolio image preview">
+  <button class="lb_next" type="button" aria-label="Next portfolio image">›</button>
 `;
 
 document.body.appendChild(lightbox);
@@ -137,6 +154,17 @@ gallery.addEventListener("click", (e) => {
   const img = e.target.closest(".portfolio_img");
   if (!img) return;
 
+  const sourceIndex = images.findIndex(item => item.dataset.i === img.dataset.i);
+  openLightbox(sourceIndex === -1 ? 0 : sourceIndex);
+});
+
+gallery.addEventListener("keydown", (e) => {
+  if (e.key !== "Enter" && e.key !== " ") return;
+
+  const img = e.target.closest(".portfolio_img");
+  if (!img) return;
+
+  e.preventDefault();
   const sourceIndex = images.findIndex(item => item.dataset.i === img.dataset.i);
   openLightbox(sourceIndex === -1 ? 0 : sourceIndex);
 });
@@ -259,26 +287,95 @@ document.addEventListener("keydown", (e) => {
 // =========================
 
 const form = document.querySelector(".connections_form");
+const captchaModal = document.querySelector(".captcha_modal");
+const captchaOverlay = document.querySelector(".captcha_modal_overlay");
+const captchaClose = document.querySelector(".captcha_modal_close");
+const turnstileWidget = document.querySelector(".cf-turnstile");
+let pendingContactForm = null;
+let turnstileToken = null;
+let turnstileWidgetId = null;
 
-form?.addEventListener("submit", async (e) => {
-  e.preventDefault();
+function resetTurnstile() {
+  if (window.turnstile && turnstileWidgetId !== null) {
+    window.turnstile.reset(turnstileWidgetId);
+  }
+}
 
-  const checkbox = document.getElementById("checkbox");
-  const submitBtn = form.querySelector('button[type="submit"]');
-
-  if (!checkbox?.checked) {
-    alert("Accept terms");
+function renderTurnstile() {
+  if (!window.turnstile || !turnstileWidget || turnstileWidgetId !== null) {
     return;
   }
 
-  const formData = new FormData(form);
+  turnstileWidgetId = window.turnstile.render(turnstileWidget, {
+    sitekey: turnstileWidget.dataset.sitekey,
+    callback: window.onTurnstileSuccess,
+    "expired-callback": window.onTurnstileExpired,
+    "error-callback": window.onTurnstileError,
+  });
+}
+
+function openCaptchaModal() {
+  if (!captchaModal) return;
+  console.log("OPEN CAPTCHA MODAL");
+  captchaModal.classList.add("active");
+  captchaModal.setAttribute("aria-hidden", "false");
+  renderTurnstile();
+}
+
+function closeCaptchaModal(clearPendingForm = true) {
+  if (!captchaModal) return;
+  captchaModal.classList.remove("active");
+  captchaModal.setAttribute("aria-hidden", "true");
+
+  if (clearPendingForm) {
+    pendingContactForm = null;
+    turnstileToken = null;
+    resetTurnstile();
+  }
+}
+
+function isContactFormValid(contactForm) {
+  const fullName = contactForm.elements.fullName;
+  const phone = contactForm.elements.phone;
+  const email = contactForm.elements.email;
+  const consent = contactForm.elements.consent;
+  const isValid = (
+    fullName.value.trim().length >= 2
+    && fullName.value.trim().length <= 100
+    && /\p{L}/u.test(fullName.value)
+    && /^[0-9+\-\s()]{6,30}$/.test(phone.value.trim())
+    && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)
+    && consent.checked
+    && contactForm.checkValidity()
+  );
+
+  if (!isValid) {
+    [fullName, phone, email].forEach(input => {
+      input.dispatchEvent(new Event("blur"));
+    });
+    contactForm.reportValidity();
+  }
+
+  return isValid;
+}
+
+async function submitContactForm(contactForm, turnstileToken = "") {
+  if (!contactForm) return;
+
+  console.log("SENDING CONTACT FORM");
+  const submitBtn = contactForm.querySelector('button[type="submit"]');
+  const formData = new FormData(contactForm);
+  formData.set("cf-turnstile-response", turnstileToken);
 
   try {
     if (submitBtn) submitBtn.disabled = true;
 
-    const res = await fetch(form.action, {
+    const res = await fetch(contactForm.action, {
       method: "POST",
-      body: formData
+      body: formData,
+      headers: {
+        "X-Requested-With": "XMLHttpRequest"
+      }
     });
 
     let data;
@@ -289,9 +386,14 @@ form?.addEventListener("submit", async (e) => {
       throw new Error(`Invalid server response: ${res.status}`);
     }
 
+    console.log("CONTACT RESPONSE", data);
+
     if (res.ok && data.ok === true) {
       openModal(); // Show success modal
-      form.reset();
+      contactForm.reset();
+      pendingContactForm = null;
+      turnstileToken = null;
+      resetTurnstile();
     } else {
       const message = data.errors
         ? Object.values(data.errors).join("\n")
@@ -299,23 +401,87 @@ form?.addEventListener("submit", async (e) => {
 
       alert(message);
       console.log("SERVER ERROR:", data);
+      pendingContactForm = null;
+      turnstileToken = null;
+      resetTurnstile();
     }
 
   } catch (err) {
     alert("Unable to send your message. Please try again.");
     console.log("FETCH ERROR:", err);
+    pendingContactForm = null;
+    turnstileToken = null;
+    resetTurnstile();
   } finally {
     if (submitBtn) submitBtn.disabled = false;
+  }
+}
+
+window.onTurnstileSuccess = function (token) {
+  console.log("TURNSTILE SUCCESS", token);
+  turnstileToken = token;
+  const contactForm = pendingContactForm;
+  closeCaptchaModal(false);
+
+  if (contactForm) {
+    submitContactForm(contactForm, turnstileToken);
+  } else {
+    console.error("No pending contact form");
+  }
+};
+
+window.onTurnstileExpired = function () {
+  turnstileToken = null;
+  resetTurnstile();
+};
+
+window.onTurnstileError = function () {
+  alert("Unable to complete verification. Please try again.");
+  turnstileToken = null;
+  resetTurnstile();
+};
+
+window.onTurnstileLoad = function () {
+  if (captchaModal?.classList.contains("active")) {
+    renderTurnstile();
+  }
+};
+
+captchaClose?.addEventListener("click", () => closeCaptchaModal());
+captchaOverlay?.addEventListener("click", () => closeCaptchaModal());
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && captchaModal?.classList.contains("active")) {
+    closeCaptchaModal();
+  }
+});
+
+form?.addEventListener("submit", (e) => {
+  e.preventDefault();
+  console.log("FORM SUBMIT");
+
+  if (!isContactFormValid(form)) {
+    return;
+  }
+
+  pendingContactForm = form;
+
+  if (captchaModal) {
+    openCaptchaModal();
+  } else {
+    submitContactForm(form);
   }
 });
 
 const menuBtn = document.querySelector(".header_list_item_custom");
+const menuToggle = menuBtn?.querySelector('[aria-controls="side-menu"]');
 const sideMenu = document.querySelector(".side_menu");
 const overlay = document.querySelector(".menu_overlay");
 
 function closeMenu() {
   sideMenu?.classList.remove("active");
   overlay?.classList.remove("active");
+  menuToggle?.setAttribute("aria-expanded", "false");
 }
 
 // Open menu
@@ -323,6 +489,7 @@ menuBtn?.addEventListener("click", (e) => {
   e.preventDefault();
   sideMenu?.classList.add("active");
   overlay?.classList.add("active");
+  menuToggle?.setAttribute("aria-expanded", "true");
 });
 
 // Close menu on overlay click

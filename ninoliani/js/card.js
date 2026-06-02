@@ -3,6 +3,7 @@
 // =========================
 
 const menuBtn = document.querySelector(".header_list_item_custom");
+const menuToggle = menuBtn?.querySelector('[aria-controls="side-menu"]');
 const sideMenu = document.querySelector(".side_menu");
 const overlay = document.querySelector(".menu_overlay");
 
@@ -11,13 +12,23 @@ if (menuBtn && sideMenu && overlay) {
         e.preventDefault();
         sideMenu.classList.add("active");
         overlay.classList.add("active");
+        menuToggle?.setAttribute("aria-expanded", "true");
     });
 
     overlay.addEventListener("click", () => {
         sideMenu.classList.remove("active");
         overlay.classList.remove("active");
+        menuToggle?.setAttribute("aria-expanded", "false");
     });
 }
+
+document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+
+    sideMenu?.classList.remove("active");
+    overlay?.classList.remove("active");
+    menuToggle?.setAttribute("aria-expanded", "false");
+});
 
 
 // =========================

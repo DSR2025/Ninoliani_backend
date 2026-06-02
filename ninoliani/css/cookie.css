@@ -1,0 +1,147 @@
+.cookie_banner {
+  box-sizing: border-box;
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1400;
+  max-width: 440px;
+  padding: 20px;
+  border: 1px solid #c0c0c0;
+  background: #fff;
+  color: #161616;
+  box-shadow: 0 8px 28px rgba(22, 22, 22, 0.08);
+}
+
+.cookie_banner_text {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.35;
+}
+
+.cookie_banner_actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.cookie_banner_button {
+  box-sizing: border-box;
+  min-width: 112px;
+  min-height: 42px;
+  padding: 9px 18px;
+  border: 1px solid #161616;
+  background: #161616;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+}
+
+.cookie_banner_button:hover {
+  background: transparent;
+  color: #161616;
+}
+
+.cookie_banner_button_secondary {
+  background: transparent;
+  color: #161616;
+}
+
+.cookie_banner_button_secondary:hover {
+  background: #161616;
+  color: #fff;
+}
+
+@media (max-width: 1439px) {
+  .cookie_banner {
+    right: 20px;
+    bottom: 20px;
+  }
+}
+
+@media (max-width: 1279px) {
+  .cookie_banner {
+    max-width: 420px;
+    padding: 18px;
+  }
+}
+
+@media (max-width: 1023px) {
+  .cookie_banner {
+    right: 18px;
+    bottom: 18px;
+    max-width: 400px;
+  }
+
+  .cookie_banner_actions {
+    margin-top: 14px;
+  }
+}
+
+@media (max-width: 767px) {
+  .cookie_banner {
+    right: 16px;
+    bottom: 16px;
+    left: 16px;
+    max-width: none;
+    padding: 16px;
+  }
+
+  .cookie_banner_text {
+    font-size: 15px;
+    line-height: 1.4;
+  }
+
+  .cookie_banner_actions {
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .cookie_banner_button {
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 429px) {
+  .cookie_banner {
+    right: 12px;
+    bottom: 12px;
+    left: 12px;
+    padding: 14px;
+  }
+
+  .cookie_banner_actions {
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .cookie_banner_button {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 16px;
+  }
+}
+
+@media (max-width: 374px) {
+  .cookie_banner {
+    right: 8px;
+    bottom: 8px;
+    left: 8px;
+    padding: 12px;
+  }
+
+  .cookie_banner_text {
+    font-size: 14px;
+    line-height: 1.35;
+  }
+
+  .cookie_banner_actions {
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  .cookie_banner_button {
+    min-height: 42px;
+    padding: 9px 14px;
+  }
+}
