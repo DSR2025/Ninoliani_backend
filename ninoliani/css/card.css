@@ -155,6 +155,10 @@
     text-transform: uppercase;
 }
 
+.main_card_preorder{
+    text-transform: none;
+}
+
 .main_card_price_wrapper {
     display: flex;
     gap: 10px;

@@ -7,6 +7,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ninoliani — Luxury Fashion & Designer Collections</title>
+  <link rel="icon" type="image/svg+xml" href="{% static 'img/favicon.svg' %}">
+  <link rel="shortcut icon" href="{% static 'img/favicon.svg' %}">
   <meta name="description" content="Discover exclusive designer collections, luxury fashion pieces and handcrafted garments by Ninoliani. Explore new arrivals and signature collections.">
   <meta name="keywords" content="Ninoliani, luxury fashion, designer clothing, women's fashion, designer dresses, fashion collections">
   <link rel="canonical" href="{{ canonical_url }}">
@@ -141,12 +143,9 @@
         </div>
         <div class="hero_main_bottom">
           <div class="hero_main_bottom_wrapper">
-            <div class="hero_main_bottom_card">
-              <img class="hero_main_bottom_card_img" src="{% static 'img/unit2/pic1_unit2.webp' %}" alt="Nino Liani new arrival dress detail" loading="lazy" decoding="async">
-            </div>
-            <div class="hero_main_bottom_card">
-              <img class="hero_main_bottom_card_img" src="{% static 'img/unit2/pic2_unit2.webp' %}" alt="Nino Liani new arrival editorial photo" loading="lazy" decoding="async">
-            </div>
+            {% for arrival in new_arrivals|slice:":2" %}
+              {% include "partials/home_new_arrival_card.html" %}
+            {% endfor %}
           </div>
           <div class="hero_main_bottom_wrapper">
             <div class="hero_main_bottom_card">
@@ -165,9 +164,9 @@
                 </a>
               </div>
             </div>
-            <div class="hero_main_bottom_card">
-              <img class="hero_main_bottom_card_img" src="{% static 'img/unit2/pic3_unit2.webp' %}" alt="Nino Liani new arrival fashion look" loading="lazy" decoding="async">
-            </div>
+            {% for arrival in new_arrivals|slice:"2:3" %}
+              {% include "partials/home_new_arrival_card.html" %}
+            {% endfor %}
           </div>
         </div>
       </div>

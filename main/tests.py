@@ -1,10 +1,250 @@
+from django.contrib import admin
 from django.contrib.staticfiles import finders
 from django.core import mail
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
 from unittest.mock import patch
 
+from .admin import (
+    HomeNewArrivalAdmin,
+    ProductAdmin,
+    ProductAdminForm,
+    ProductImageInline,
+)
+from .models import HomeNewArrival, Product, ProductImage
 from .views import verify_turnstile_token
+
+
+class HomeNewArrivalTests(TestCase):
+    def create_product(self, name, price="100.00"):
+        return Product.objects.create(
+            name=name,
+            price=price,
+            description="Description",
+            materials="Materials",
+            color="Black",
+            product_type="Dress",
+        )
+
+    def test_homepage_shows_at_most_three_active_arrivals_in_sort_order(self):
+        products = [
+            self.create_product(name)
+            for name in ("Fourth", "Second", "First", "Third")
+        ]
+        arrivals = [
+            HomeNewArrival.objects.create(product=product, sort_order=sort_order)
+            for sort_order, product in zip((40, 20, 10, 30), products)
+        ]
+
+        response = self.client.get(reverse("home"))
+
+        homepage_arrivals = list(response.context["new_arrivals"])
+        self.assertEqual(
+            [arrival.product.name for arrival in homepage_arrivals],
+            ["First", "Second", "Third"],
+        )
+
+        arrivals[0].sort_order = 5
+        arrivals[0].save(update_fields=("sort_order",))
+
+        response = self.client.get(reverse("home"))
+
+        homepage_arrivals = list(response.context["new_arrivals"])
+        self.assertEqual(
+            [arrival.product.name for arrival in homepage_arrivals],
+            ["Fourth", "First", "Second"],
+        )
+
+    def test_disabled_arrival_is_not_shown(self):
+        product = self.create_product("Hidden")
+        HomeNewArrival.objects.create(product=product, is_active=False)
+
+        response = self.client.get(reverse("home"))
+
+        self.assertNotContains(response, product.name)
+
+    def test_inactive_product_is_not_shown(self):
+        product = self.create_product("Inactive")
+        product.is_active = False
+        product.save(update_fields=("is_active",))
+        HomeNewArrival.objects.create(product=product)
+
+        response = self.client.get(reverse("home"))
+
+        self.assertNotContains(response, product.name)
+
+    def test_homepage_flip_card_links_to_product_and_uses_second_image_on_back(self):
+        product = self.create_product("Featured")
+        product.discount_price = "75.00"
+        product.save(update_fields=("discount_price",))
+        ProductImage.objects.create(
+            product=product,
+            image="products/featured-main.webp",
+            sort_order=1,
+        )
+        ProductImage.objects.create(
+            product=product,
+            image="products/featured-hover.webp",
+            sort_order=2,
+        )
+        HomeNewArrival.objects.create(product=product)
+
+        response = self.client.get(reverse("home"))
+
+        self.assertContains(response, product.get_absolute_url())
+        self.assertContains(response, "products/featured-main.webp")
+        self.assertContains(response, "products/featured-hover.webp")
+        self.assertContains(response, 'aria-label="View Featured"')
+        self.assertContains(response, "hero_new_arrival_flip_back")
+        self.assertContains(response, "Description")
+        self.assertNotContains(response, "VIEW PRODUCT")
+        self.assertContains(response, "$75.00")
+        self.assertNotContains(response, "$100.00")
+
+    def test_homepage_flip_card_uses_first_image_as_back_fallback(self):
+        product = self.create_product("One image")
+        ProductImage.objects.create(product=product, image="products/one-image.webp")
+        HomeNewArrival.objects.create(product=product)
+
+        response = self.client.get(reverse("home"))
+
+        self.assertContains(response, "products/one-image.webp", count=2)
+
+    def test_homepage_flip_card_uses_description_fallback(self):
+        product = self.create_product("Fallback")
+        product.description = ""
+        product.save(update_fields=("description",))
+        ProductImage.objects.create(product=product, image="products/fallback.webp")
+        HomeNewArrival.objects.create(product=product)
+
+        response = self.client.get(reverse("home"))
+
+        self.assertContains(response, "Discover the piece.")
+
+    def test_homepage_does_not_break_when_arrival_has_no_image(self):
+        product = self.create_product("Without image")
+        HomeNewArrival.objects.create(product=product)
+
+        response = self.client.get(reverse("home"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, 'aria-label="View Without image"')
+
+
+class ProductAdminTests(TestCase):
+    def create_product(self, name="Hydra Dress", slug="hydra-dress", color="White"):
+        return Product.objects.create(
+            name=name,
+            slug=slug,
+            price="100.00",
+            description="Description",
+            materials="Materials",
+            color=color,
+            product_type="Mini Dress",
+        )
+
+    def test_products_with_same_name_get_unique_slugs_skus_and_urls(self):
+        first_product = self.create_product()
+        second_product = self.create_product(color="Blue")
+
+        self.assertEqual(first_product.slug, "hydra-dress")
+        self.assertEqual(second_product.slug, "hydra-dress-2")
+        self.assertNotEqual(first_product.sku, second_product.sku)
+        self.assertNotEqual(
+            first_product.get_absolute_url(),
+            second_product.get_absolute_url(),
+        )
+        self.assertEqual(self.client.get(first_product.get_absolute_url()).status_code, 200)
+        self.assertEqual(self.client.get(second_product.get_absolute_url()).status_code, 200)
+
+    def test_products_with_same_name_and_empty_slug_get_incremented_slugs(self):
+        products = [
+            self.create_product(slug="", color=color)
+            for color in ("White", "Blue", "Black")
+        ]
+
+        self.assertEqual(
+            [product.slug for product in products],
+            ["hydra-dress", "hydra-dress-2", "hydra-dress-3"],
+        )
+
+    def test_existing_product_slug_is_preserved_when_saved_again(self):
+        product = self.create_product()
+        product.name = "Renamed Dress"
+
+        product.save()
+
+        self.assertEqual(product.slug, "hydra-dress")
+
+    def test_product_admin_form_normalizes_conflicting_manual_slug(self):
+        self.create_product()
+        form = ProductAdminForm(
+            data={
+                "name": "Hydra Dress",
+                "slug": "Hydra Dress",
+                "price": "100.00",
+                "description": "Description",
+                "materials": "Materials",
+                "color": "Blue",
+                "product_type": "Mini Dress",
+                "is_active": "on",
+            }
+        )
+
+        self.assertTrue(form.is_valid(), form.errors)
+        self.assertEqual(form.save().slug, "hydra-dress-2")
+
+    def test_product_string_identifies_variant(self):
+        product = self.create_product()
+
+        self.assertEqual(
+            str(product),
+            f"Hydra Dress — White — Mini Dress — {product.sku}",
+        )
+
+    def test_product_and_home_arrival_admin_preview_first_sorted_image(self):
+        product = self.create_product()
+        ProductImage.objects.create(
+            product=product,
+            image="products/second.webp",
+            sort_order=20,
+        )
+        ProductImage.objects.create(
+            product=product,
+            image="products/first.webp",
+            sort_order=10,
+        )
+        arrival = HomeNewArrival.objects.create(product=product)
+
+        product_preview = ProductAdmin(Product, admin.site).image_preview(product)
+        arrival_preview = HomeNewArrivalAdmin(
+            HomeNewArrival,
+            admin.site,
+        ).image_preview(arrival)
+
+        self.assertIn("products/first.webp", product_preview)
+        self.assertNotIn("products/second.webp", product_preview)
+        self.assertIn("products/first.webp", arrival_preview)
+
+    def test_product_image_inline_preview_handles_image_and_empty_object(self):
+        product = self.create_product()
+        product_image = ProductImage.objects.create(
+            product=product,
+            image="products/inline.webp",
+        )
+        inline = ProductImageInline(Product, admin.site)
+
+        self.assertIn("products/inline.webp", inline.image_preview(product_image))
+        self.assertEqual(inline.image_preview(ProductImage()), "—")
+
+    def test_sitemap_contains_both_products_with_same_name(self):
+        first_product = self.create_product()
+        second_product = self.create_product(color="Blue")
+
+        response = self.client.get(reverse("django.contrib.sitemaps.views.sitemap"))
+
+        self.assertContains(response, first_product.get_absolute_url())
+        self.assertContains(response, second_product.get_absolute_url())
 
 
 @override_settings(
@@ -172,3 +412,6 @@ class ContactViewTests(TestCase):
         self.assertIsNone(finders.find("send.php"))
         self.assertIsNone(finders.find("test.php"))
         self.assertIsNone(finders.find("vendor/autoload.php"))
+
+    def test_favicon_is_a_static_asset(self):
+        self.assertIsNotNone(finders.find("img/favicon.svg"))

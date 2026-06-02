@@ -1,6 +1,7 @@
 import uuid
 
 from django.db import models
+from django.urls import reverse
 from django.utils.text import slugify
 
 
@@ -108,8 +109,8 @@ class Product(models.Model):
         ordering = ("-created_at",)
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = generate_unique_slug(self, self.name)
+        if not self.pk or not self.slug:
+            self.slug = generate_unique_slug(self, self.slug or self.name)
         if not self.sku:
             self.sku = f"NIN-{uuid.uuid4().hex[:8].upper()}"
         super().save(*args, **kwargs)
@@ -122,8 +123,33 @@ class Product(models.Model):
     def main_image(self):
         return self.images.first()
 
+    def get_absolute_url(self):
+        return reverse("product_detail", kwargs={"slug": self.slug})
+
     def __str__(self):
-        return self.name
+        return " — ".join(
+            part
+            for part in (self.name, self.color, self.product_type, self.sku)
+            if part
+        )
+
+
+class HomeNewArrival(models.Model):
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name="home_new_arrivals",
+    )
+    sort_order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ("sort_order", "pk")
+        verbose_name = "Homepage New Arrival"
+        verbose_name_plural = "Homepage New Arrivals"
+
+    def __str__(self):
+        return str(self.product)
 
 
 class ProductImage(models.Model):

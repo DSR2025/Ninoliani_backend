@@ -62,8 +62,13 @@
     }
 
     .filter_dropdown {
-        gap: 16px;
+        column-gap: 16px;
         padding: 24px 16px;
+    }
+
+    .filter_submit_btn{
+        padding: 9px 0;
+        font-size: 16px;
     }
 
     .filter_column label {
@@ -293,9 +298,13 @@
     }
 
     .filter_dropdown {
-        gap: 12px;
+        column-gap: 12px;
         padding: 16px 8px;
         top: 24px;
+    }
+
+    .filter_submit_btn{
+        font-size: 14px;
     }
 
     .filter_column label {

@@ -118,9 +118,10 @@
     justify-content: space-between;
     margin-bottom: 32px;
 }
- /* Dresses */
 
- .nav_catalog_dresses_panel {
+/* Dresses */
+
+.nav_catalog_dresses_panel {
     position: absolute;
     top: 38px;
     width: 1392px;
@@ -227,10 +228,32 @@
     left: 0;
 
 
-    display: flex;
-    gap: 24px;
+    display: grid;
+    grid-template-columns: max-content max-content;
+    column-gap: 24px;
 
     padding: 32px 24px;
+}
+
+.filter_submit_btn {
+    grid-column: 1 / -1;
+    width: 100%;
+    padding: 11px 0;
+    margin-top: 16px;
+    padding: 11px 0;
+    text-align: center;
+    color: #FFF;
+    font-style: normal;
+    font-weight: 300;
+    letter-spacing: 6%;
+    border: 1px solid #161616;
+    background: #161616;
+    transition: .3s ease-in-out;
+}
+
+.filter_submit_btn:hover {
+    color: #161616;
+    background: transparent;
 }
 
 /* SORT POSITION */
@@ -519,7 +542,7 @@
     transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.card > a {
+.card>a {
     display: block;
     width: 100%;
 }
@@ -581,6 +604,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+
     .card,
     .card_img,
     .card_name,

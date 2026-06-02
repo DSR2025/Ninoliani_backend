@@ -379,6 +379,11 @@
         margin-bottom: 24px;
     }
 
+    .collections_logo_title_greek {
+        font-size: 12px;
+    }
+
+
     .about_content_img,
     .about_img {
         width: 484px;
@@ -763,6 +768,10 @@
 
     .hero_main_bottom_card_button_wrapper {
         margin: 0;
+    }
+
+    .collections_logo_title_greek {
+        font-size: 16px;
     }
 
     .none {
@@ -1199,6 +1208,10 @@
     .text_mobile,
     .connections_descr {
         margin-bottom: 16px;
+    }
+
+    .collections_logo_title_greek {
+        font-size: 12px;
     }
 
     .about {

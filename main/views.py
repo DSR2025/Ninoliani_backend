@@ -17,7 +17,7 @@ from django.templatetags.static import static
 from django.views.decorators.http import require_POST
 
 from .forms import ContactForm
-from .models import Category, Collection, Product
+from .models import Category, Collection, HomeNewArrival, Product
 
 
 logger = logging.getLogger(__name__)
@@ -39,12 +39,19 @@ def home_view(request):
         "sort_order",
         "name",
     )
+    new_arrivals = (
+        HomeNewArrival.objects.filter(is_active=True, product__is_active=True)
+        .select_related("product")
+        .prefetch_related("product__images")
+        .order_by("sort_order", "pk")[:3]
+    )
     return render(
         request,
         "index.html",
         {
             "canonical_url": request.build_absolute_uri(request.path),
             "collections": collections,
+            "new_arrivals": new_arrivals,
             "seo_image_url": request.build_absolute_uri(
                 static("img/unit1/pic1_unit1.webp")
             ),
