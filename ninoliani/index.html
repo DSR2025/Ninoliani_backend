@@ -325,9 +325,9 @@
             <img class="collections_sun" src="{{ collection.logo_image.url }}" alt="{{ collection.name }} collection logo" loading="lazy" decoding="async">
           </div>
           {% endif %}
-          {% if collection.main_image %}
+          {% if collection.active_gallery_images or collection.main_image %}
           <div class="collections_right_wrapper collections_right_wrapper_mobile">
-            <img class="collections_right_img" src="{{ collection.main_image.url }}" alt="{{ collection.name }} collection fashion look" loading="lazy" decoding="async">
+            {% include "partials/collection_gallery_slider.html" %}
           </div>
           {% endif %}
           <div class="collections_decr_wrapper">
@@ -344,9 +344,9 @@
             </a>
           </div>
         </div>
-        {% if collection.main_image %}
+        {% if collection.active_gallery_images or collection.main_image %}
         <div class="collections_right_wrapper none">
-          <img class="collections_right_img" src="{{ collection.main_image.url }}" alt="{{ collection.name }} collection fashion look" loading="lazy" decoding="async">
+          {% include "partials/collection_gallery_slider.html" %}
         </div>
         {% endif %}
         {% endfor %}

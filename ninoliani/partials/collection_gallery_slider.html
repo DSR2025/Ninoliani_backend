@@ -1,0 +1,9 @@
+<div class="collections_right_slider" data-collection-slider>
+  {% if collection.active_gallery_images %}
+    {% for image in collection.active_gallery_images %}
+      <img class="collections_right_img collections_right_slide{% if forloop.first %} active{% endif %}" src="{{ image.image.url }}" alt="{{ image.alt_text|default:collection.name }}" loading="lazy" decoding="async">
+    {% endfor %}
+  {% elif collection.main_image %}
+    <img class="collections_right_img collections_right_slide active" src="{{ collection.main_image.url }}" alt="{{ collection.name }} collection fashion look" loading="lazy" decoding="async">
+  {% endif %}
+</div>

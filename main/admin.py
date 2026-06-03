@@ -1,10 +1,13 @@
 from django import forms
 from django.contrib import admin
+from django.core.exceptions import ValidationError
+from django.forms.models import BaseInlineFormSet
 from django.utils.html import format_html
 
 from .models import (
     Category,
     Collection,
+    CollectionImage,
     HomeNewArrival,
     Product,
     ProductImage,
@@ -24,6 +27,43 @@ class ProductImageInline(admin.TabularInline):
                 '<img src="{}" style="width: 64px; height: 88px; '
                 'object-fit: cover; border-radius: 4px;" />',
                 product_image.image.url,
+            )
+        return "—"
+
+
+class CollectionImageInlineFormSet(BaseInlineFormSet):
+    def clean(self):
+        super().clean()
+
+        active_count = 0
+        for form in self.forms:
+            if not hasattr(form, "cleaned_data"):
+                continue
+            if form.cleaned_data.get("DELETE"):
+                continue
+            if form.cleaned_data.get("is_active"):
+                active_count += 1
+
+        if active_count > 6:
+            raise ValidationError(
+                "A collection can have a maximum of 6 active gallery images."
+            )
+
+
+class CollectionImageInline(admin.TabularInline):
+    model = CollectionImage
+    formset = CollectionImageInlineFormSet
+    extra = 1
+    fields = ("image_preview", "image", "alt_text", "sort_order", "is_active")
+    readonly_fields = ("image_preview",)
+
+    @admin.display(description="Preview")
+    def image_preview(self, collection_image):
+        if collection_image.image:
+            return format_html(
+                '<img src="{}" style="width: 80px; height: 110px; '
+                'object-fit: cover; border-radius: 4px;" />',
+                collection_image.image.url,
             )
         return "—"
 
@@ -61,6 +101,10 @@ class CollectionAdmin(admin.ModelAdmin):
     list_filter = ("is_active",)
     prepopulated_fields = {"slug": ("name",)}
     search_fields = ("name", "slug", "greek_title")
+    inlines = (CollectionImageInline,)
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related("gallery_images")
 
 
 @admin.register(Product)

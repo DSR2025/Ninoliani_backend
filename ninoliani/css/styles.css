@@ -962,9 +962,31 @@ p {
 	max-width: 686px;
 }
 
+.collections_right_slider {
+	display: grid;
+	overflow: hidden;
+}
+
 .collections_right_img {
 	width: 686px;
 	height: 850px;
+	display: block;
+	object-fit: cover;
+}
+
+.collections_right_slide {
+	grid-area: 1 / 1;
+	opacity: 0;
+	transform: scale(1.06);
+	transition:
+		opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1),
+		transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+	will-change: opacity, transform;
+}
+
+.collections_right_slide.active {
+	opacity: 1;
+	transform: scale(1);
 }
 
 

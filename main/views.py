@@ -8,6 +8,7 @@ from django.core.exceptions import PermissionDenied
 from django.core.paginator import InvalidPage, Paginator
 from django.conf import settings
 from django.core.mail import send_mail
+from django.db.models import Prefetch
 from django.db.models.functions import Coalesce
 from django.http import Http404, HttpResponse, JsonResponse
 from django.urls import reverse
@@ -17,7 +18,7 @@ from django.templatetags.static import static
 from django.views.decorators.http import require_POST
 
 from .forms import ContactForm
-from .models import Category, Collection, HomeNewArrival, Product
+from .models import Category, Collection, CollectionImage, HomeNewArrival, Product
 
 
 logger = logging.getLogger(__name__)
@@ -35,9 +36,22 @@ def error_page_view(request, exception=None):
 
 
 def home_view(request):
-    collections = Collection.objects.filter(is_active=True).order_by(
-        "sort_order",
-        "name",
+    collections = (
+        Collection.objects.filter(is_active=True)
+        .prefetch_related(
+            Prefetch(
+                "gallery_images",
+                queryset=CollectionImage.objects.filter(is_active=True).order_by(
+                    "sort_order",
+                    "pk",
+                ),
+                to_attr="active_gallery_images",
+            )
+        )
+        .order_by(
+            "sort_order",
+            "name",
+        )
     )
     new_arrivals = (
         HomeNewArrival.objects.filter(is_active=True, product__is_active=True)

@@ -1,5 +1,6 @@
 import uuid
 
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
@@ -72,6 +73,42 @@ class Collection(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class CollectionImage(models.Model):
+    collection = models.ForeignKey(
+        Collection,
+        on_delete=models.CASCADE,
+        related_name="gallery_images",
+    )
+    image = models.ImageField(upload_to="collections/gallery/")
+    alt_text = models.CharField(max_length=255, blank=True)
+    sort_order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ("sort_order", "pk")
+
+    def clean(self):
+        super().clean()
+
+        if not self.is_active or not self.collection_id:
+            return
+
+        active_images = CollectionImage.objects.filter(
+            collection_id=self.collection_id,
+            is_active=True,
+        )
+        if self.pk:
+            active_images = active_images.exclude(pk=self.pk)
+
+        if active_images.count() >= 6:
+            raise ValidationError(
+                "A collection can have a maximum of 6 active gallery images."
+            )
+
+    def __str__(self):
+        return f"{self.collection.name} gallery image"
 
 
 class Product(models.Model):

@@ -209,6 +209,7 @@ lightbox.addEventListener("touchend", (e) => {
 // =========================
 
 document.addEventListener("DOMContentLoaded", () => {
+  initCollectionSliders();
 
   const inputs = document.querySelectorAll(".connections_form_input");
 
@@ -254,6 +255,22 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 });
+
+function initCollectionSliders() {
+  document.querySelectorAll("[data-collection-slider]").forEach((slider) => {
+    const slides = slider.querySelectorAll(".collections_right_slide");
+
+    if (slides.length <= 1) return;
+
+    let current = 0;
+
+    setInterval(() => {
+      slides[current].classList.remove("active");
+      current = (current + 1) % slides.length;
+      slides[current].classList.add("active");
+    }, 4200);
+  });
+}
 
 // =========================
 // MODAL
