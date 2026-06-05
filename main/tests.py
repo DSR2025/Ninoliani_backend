@@ -1,7 +1,10 @@
+import tempfile
+from pathlib import Path
+
 from django.contrib import admin
 from django.contrib.staticfiles import finders
 from django.core import mail
-from django.test import Client, TestCase, override_settings
+from django.test import Client, TestCase, TransactionTestCase, override_settings
 from django.urls import reverse
 from unittest.mock import patch
 
@@ -11,8 +14,132 @@ from .admin import (
     ProductAdminForm,
     ProductImageInline,
 )
-from .models import HomeNewArrival, Product, ProductImage
+from .models import Collection, CollectionImage, HomeNewArrival, Product, ProductImage
+from .templatetags.price_format import price_display
 from .views import verify_turnstile_token
+
+
+class PriceDisplayTests(TestCase):
+    def test_price_display_removes_zero_cents_only(self):
+        self.assertEqual(price_display("500.00"), "500")
+        self.assertEqual(price_display("1200.00"), "1200")
+        self.assertEqual(price_display("499.99"), "499.99")
+        self.assertEqual(price_display("799.50"), "799.50")
+
+
+class MediaCleanupTests(TransactionTestCase):
+    def setUp(self):
+        self.media_root = tempfile.TemporaryDirectory()
+        self.settings_override = override_settings(MEDIA_ROOT=self.media_root.name)
+        self.settings_override.enable()
+
+    def tearDown(self):
+        self.settings_override.disable()
+        self.media_root.cleanup()
+
+    def media_file(self, name):
+        path = Path(self.media_root.name) / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(b"image")
+        return path
+
+    def create_product(self):
+        return Product.objects.create(
+            name="Cleanup Dress",
+            price="100.00",
+            description="Description",
+            materials="Materials",
+            color="Black",
+            product_type="Dress",
+        )
+
+    def test_deleting_product_image_removes_unused_file(self):
+        image_path = self.media_file("products/cleanup.webp")
+        product_image = ProductImage.objects.create(
+            product=self.create_product(),
+            image="products/cleanup.webp",
+        )
+
+        product_image.delete()
+
+        self.assertFalse(image_path.exists())
+
+    def test_replacing_product_image_removes_old_unused_file(self):
+        old_path = self.media_file("products/old.webp")
+        new_path = self.media_file("products/new.webp")
+        product_image = ProductImage.objects.create(
+            product=self.create_product(),
+            image="products/old.webp",
+        )
+
+        product_image.image = "products/new.webp"
+        product_image.save(update_fields=("image",))
+
+        self.assertFalse(old_path.exists())
+        self.assertTrue(new_path.exists())
+
+    def test_shared_file_is_not_deleted_when_product_image_is_removed(self):
+        shared_path = self.media_file("products/shared.webp")
+        first_product = self.create_product()
+        second_product = self.create_product()
+        first_image = ProductImage.objects.create(
+            product=first_product,
+            image="products/shared.webp",
+        )
+        ProductImage.objects.create(
+            product=second_product,
+            image="products/shared.webp",
+        )
+
+        first_image.delete()
+
+        self.assertTrue(shared_path.exists())
+
+    def test_deleting_collection_removes_unused_logo_and_main_image(self):
+        logo_path = self.media_file("collections/logos/logo.webp")
+        main_path = self.media_file("collections/images/main.webp")
+        collection = Collection.objects.create(
+            name="Cleanup Collection",
+            logo_image="collections/logos/logo.webp",
+            main_image="collections/images/main.webp",
+        )
+
+        collection.delete()
+
+        self.assertFalse(logo_path.exists())
+        self.assertFalse(main_path.exists())
+
+    def test_replacing_collection_images_removes_old_unused_files(self):
+        old_logo = self.media_file("collections/logos/old-logo.webp")
+        old_main = self.media_file("collections/images/old-main.webp")
+        new_logo = self.media_file("collections/logos/new-logo.webp")
+        new_main = self.media_file("collections/images/new-main.webp")
+        collection = Collection.objects.create(
+            name="Replace Collection",
+            logo_image="collections/logos/old-logo.webp",
+            main_image="collections/images/old-main.webp",
+        )
+
+        collection.logo_image = "collections/logos/new-logo.webp"
+        collection.main_image = "collections/images/new-main.webp"
+        collection.save(update_fields=("logo_image", "main_image"))
+
+        self.assertFalse(old_logo.exists())
+        self.assertFalse(old_main.exists())
+        self.assertTrue(new_logo.exists())
+        self.assertTrue(new_main.exists())
+
+    def test_deleting_collection_image_removes_unused_file(self):
+        image_path = self.media_file("collections/gallery/look.webp")
+        collection = Collection.objects.create(name="Gallery Collection")
+        collection_image = CollectionImage.objects.create(
+            collection=collection,
+            image="collections/gallery/look.webp",
+        )
+
+        collection_image.delete()
+
+        self.assertFalse(image_path.exists())
 
 
 class HomeNewArrivalTests(TestCase):
@@ -98,7 +225,8 @@ class HomeNewArrivalTests(TestCase):
         self.assertContains(response, "hero_new_arrival_flip_back")
         self.assertContains(response, "Description")
         self.assertNotContains(response, "VIEW PRODUCT")
-        self.assertContains(response, "$75.00")
+        self.assertContains(response, "$75")
+        self.assertNotContains(response, "$75.00")
         self.assertNotContains(response, "$100.00")
 
     def test_homepage_flip_card_uses_first_image_as_back_fallback(self):

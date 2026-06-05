@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-{% load static %}
+{% load static price_format %}
 <html lang="en">
 
 <head>
@@ -141,10 +141,10 @@
                         <p class="main_card_article">Article: {{ product.sku }}</p>
                         <div class="main_card_price_wrapper">
                             {% if product.discount_price %}
-                            <p class="main_card_price">${{ product.discount_price }}</p>
-                            <p class="main_card_price_sale">${{ product.price }}</p>
+                            <p class="main_card_price">${{ product.discount_price|price_display }}</p>
+                            <p class="main_card_price_sale">${{ product.price|price_display }}</p>
                             {% else %}
-                            <p class="main_card_price">${{ product.price }}</p>
+                            <p class="main_card_price">${{ product.price|price_display }}</p>
                             {% endif %}
                         </div>
                         <p class="main_card_preorder">Pre-order only. Contact to order:</p>
@@ -424,9 +424,9 @@
                         <div class="footer_bottom_wrapper">
                             <div class="footer_docs_wrapper">
                                 <div class="footer_docs_left">
-                                    <span class="footer_docs_link" aria-disabled="true">Privacy policy</span>
-                                    <span class="footer_docs_link" aria-disabled="true">General conditions of purchase </span>
-                                    <span class="footer_docs_link" aria-disabled="true">Terms & conditions</span>
+                                    <a class="footer_docs_link" href="{% static 'files/privacy policy.pdf' %}" target="_blank" rel="noopener noreferrer" aria-label="Open Privacy Policy PDF">Privacy policy</a>
+                                    <a class="footer_docs_link" href="{% static 'files/General conditions of purchase.pdf' %}" target="_blank" rel="noopener noreferrer" aria-label="Open General Conditions of Purchase PDF">General conditions of purchase </a>
+                                    <a class="footer_docs_link" href="{% static 'files/TERMS & CONDITIONS.pdf' %}" target="_blank" rel="noopener noreferrer" aria-label="Open Terms and Conditions PDF">Terms & conditions</a>
                                     <a class="footer_docs_link powered" href="https://t.me/cast189">Powered by D&S studio</a>
                                 </div>
                                 <div class="footer_docs_right">

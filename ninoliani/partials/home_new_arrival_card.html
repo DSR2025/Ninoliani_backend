@@ -1,3 +1,4 @@
+{% load price_format %}
 {% with product=arrival.product %}
 {% with front_image=product.main_image back_image=product.images.all.1 %}
 {% if front_image %}
@@ -16,7 +17,7 @@
         <div class="hero_new_arrival_flip_overlay"></div>
         <div class="hero_new_arrival_flip_content">
           <h3 class="hero_new_arrival_flip_title">{{ product.name }}</h3>
-          <p class="hero_new_arrival_flip_price">${{ product.current_price }}</p>
+          <p class="hero_new_arrival_flip_price">${{ product.current_price|price_display }}</p>
           <p class="hero_new_arrival_flip_description">{{ product.description|default:"Discover the piece."|truncatechars:200 }}</p>
         </div>
       </div>

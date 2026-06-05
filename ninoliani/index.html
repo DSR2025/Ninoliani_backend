@@ -401,8 +401,8 @@
                 <input id="checkbox" class="custom_checkbox_input" type="checkbox" name="consent" tabindex="0"
                   required />
                 <span class="custom_checkbox_text">
-                  <span class="terms_use_btn_download" aria-disabled="true">
-                    I accept the&nbsp;terms & conditions and privacy policy
+                  <span class="terms_use_btn_download">
+                    I accept the&nbsp;<a href="{% static 'files/TERMS & CONDITIONS.pdf' %}" target="_blank" rel="noopener noreferrer" aria-label="Open Terms and Conditions PDF">terms & conditions</a> and <a href="{% static 'files/privacy policy.pdf' %}" target="_blank" rel="noopener noreferrer" aria-label="Open Privacy Policy PDF">privacy policy</a>
                   </span>
                 </span>
               </label>
@@ -474,9 +474,9 @@
             <div class="footer_bottom_wrapper">
               <div class="footer_docs_wrapper">
                 <div class="footer_docs_left">
-                  <span class="footer_docs_link" aria-disabled="true">Privacy policy</span>
-                  <span class="footer_docs_link" aria-disabled="true">General conditions of purchase </span>
-                  <span class="footer_docs_link" aria-disabled="true">Terms & conditions</span>
+                  <a class="footer_docs_link" href="{% static 'files/privacy policy.pdf' %}" target="_blank" rel="noopener noreferrer" aria-label="Open Privacy Policy PDF">Privacy policy</a>
+                  <a class="footer_docs_link" href="{% static 'files/General conditions of purchase.pdf' %}" target="_blank" rel="noopener noreferrer" aria-label="Open General Conditions of Purchase PDF">General conditions of purchase </a>
+                  <a class="footer_docs_link" href="{% static 'files/TERMS & CONDITIONS.pdf' %}" target="_blank" rel="noopener noreferrer" aria-label="Open Terms and Conditions PDF">Terms & conditions</a>
                   <a class="footer_docs_link powered" href="https://t.me/cast189">Powered by D&S studio</a>
                 </div>
                 <div class="footer_docs_right">

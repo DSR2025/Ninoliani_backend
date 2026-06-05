@@ -14,6 +14,13 @@ let position = 0;
 let velocity = 0;
 let targetVelocity = 0;
 const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+const autoplayInterval = 2800;
+const autoplayTransitionDuration = 620;
+const userInteractionPause = 5000;
+let autoplayTimer = null;
+let autoplayResumeTimer = null;
+let autoplayFrame = null;
+let isPortfolioHovered = false;
 
 // Clone items for infinite scrolling
 const originals = Array.from(gallery.children);
@@ -42,16 +49,147 @@ requestAnimationFrame(() => {
 });
 
 function halfWidth() {
-  return gallery.scrollWidth / 2;
+  return cycleWidth();
+}
+
+function cycleWidth() {
+  const firstClone = gallery.children[originals.length];
+
+  return firstClone?.offsetLeft || gallery.scrollWidth / 2;
+}
+
+function normalizePosition(value) {
+  const cycle = cycleWidth();
+
+  if (!cycle) return value;
+
+  while (value <= -cycle) value += cycle;
+  while (value > 0) value -= cycle;
+
+  return value;
 }
 
 function renderTrackPosition() {
-  const half = halfWidth();
-
-  if (position <= -half) position += half;
-  if (position > 0) position -= half;
+  position = normalizePosition(position);
 
   gallery.style.transform = `translateX(${position}px)`;
+}
+
+function currentPortfolioIndex() {
+  const currentLeft = -normalizePosition(position);
+  let closestIndex = 0;
+  let closestDistance = Infinity;
+
+  originals.forEach((slide, index) => {
+    const distance = Math.abs(slide.offsetLeft - currentLeft);
+
+    if (distance < closestDistance) {
+      closestDistance = distance;
+      closestIndex = index;
+    }
+  });
+
+  return closestIndex;
+}
+
+function targetPositionForPortfolioIndex(index) {
+  const nextIndex = index % originals.length;
+  const shouldWrapForward = index >= originals.length;
+  const targetLeft = shouldWrapForward ? cycleWidth() : originals[nextIndex].offsetLeft;
+
+  return -targetLeft;
+}
+
+function cancelAutoplayMotion() {
+  if (!autoplayFrame) return;
+
+  window.cancelAnimationFrame(autoplayFrame);
+  autoplayFrame = null;
+}
+
+function moveToNextPortfolioSlide() {
+  if (!originals.length) return;
+
+  cancelAutoplayMotion();
+
+  const startPosition = position;
+  const targetPosition = targetPositionForPortfolioIndex(currentPortfolioIndex() + 1);
+  const distance = targetPosition - startPosition;
+  const startTime = performance.now();
+
+  velocity = 0;
+  targetVelocity = 0;
+
+  function animateAutoplay(now) {
+    const progress = Math.min((now - startTime) / autoplayTransitionDuration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+
+    position = startPosition + distance * eased;
+    renderTrackPosition();
+
+    if (progress < 1) {
+      autoplayFrame = window.requestAnimationFrame(animateAutoplay);
+      return;
+    }
+
+    autoplayFrame = null;
+    position = normalizePosition(targetPosition);
+    renderTrackPosition();
+  }
+
+  autoplayFrame = window.requestAnimationFrame(animateAutoplay);
+}
+
+function canAutoplay() {
+  return !reducedMotionQuery.matches && !document.hidden && !isPortfolioHovered;
+}
+
+function clearAutoplayTimer() {
+  if (!autoplayTimer) return;
+
+  window.clearTimeout(autoplayTimer);
+  autoplayTimer = null;
+}
+
+function clearAutoplayResumeTimer() {
+  if (!autoplayResumeTimer) return;
+
+  window.clearTimeout(autoplayResumeTimer);
+  autoplayResumeTimer = null;
+}
+
+function scheduleAutoplay(delay = autoplayInterval) {
+  clearAutoplayTimer();
+
+  if (!canAutoplay() || originals.length <= 1) return;
+
+  autoplayTimer = window.setTimeout(() => {
+    autoplayTimer = null;
+    moveToNextPortfolioSlide();
+    scheduleAutoplay();
+  }, delay);
+}
+
+function pauseAutoplay() {
+  clearAutoplayTimer();
+  clearAutoplayResumeTimer();
+  cancelAutoplayMotion();
+}
+
+function resumeAutoplay(delay = autoplayInterval) {
+  clearAutoplayResumeTimer();
+
+  if (!canAutoplay()) return;
+
+  autoplayResumeTimer = window.setTimeout(() => {
+    autoplayResumeTimer = null;
+    scheduleAutoplay(0);
+  }, delay);
+}
+
+function handlePortfolioInteraction() {
+  pauseAutoplay();
+  resumeAutoplay(userInteractionPause);
 }
 
 function animate() {
@@ -68,6 +206,7 @@ function animate() {
 }
 
 if (!reducedMotionQuery.matches) animate();
+scheduleAutoplay();
 
 // =========================
 // ARROW CONTROLS
@@ -75,6 +214,7 @@ if (!reducedMotionQuery.matches) animate();
 
 function start(dir) {
   targetVelocity = dir * 0.48;
+  pauseAutoplay();
 }
 
 function stop() {
@@ -93,18 +233,57 @@ function nudgeTrack(distance) {
 
 leftBtn.addEventListener("mousedown", () => start(6));
 rightBtn.addEventListener("mousedown", () => start(-6));
-document.addEventListener("mouseup", stop);
+document.addEventListener("mouseup", () => {
+  const wasMoving = targetVelocity !== 0;
+
+  stop();
+  if (wasMoving) handlePortfolioInteraction();
+});
 
 leftBtn.addEventListener("click", () => {
   nudgeTrack(120);
+  handlePortfolioInteraction();
 });
 rightBtn.addEventListener("click", () => {
   nudgeTrack(-120);
+  handlePortfolioInteraction();
 });
 
 leftBtn.addEventListener("touchstart", () => start(6));
 rightBtn.addEventListener("touchstart", () => start(-6));
-document.addEventListener("touchend", stop);
+document.addEventListener("touchend", () => {
+  const wasMoving = targetVelocity !== 0;
+
+  stop();
+  if (wasMoving) handlePortfolioInteraction();
+});
+
+gallery.closest(".portfolio")?.addEventListener("mouseenter", () => {
+  isPortfolioHovered = true;
+  pauseAutoplay();
+});
+gallery.closest(".portfolio")?.addEventListener("mouseleave", () => {
+  isPortfolioHovered = false;
+  scheduleAutoplay();
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    pauseAutoplay();
+    return;
+  }
+
+  scheduleAutoplay();
+});
+
+reducedMotionQuery.addEventListener?.("change", () => {
+  if (reducedMotionQuery.matches) {
+    pauseAutoplay();
+    return;
+  }
+
+  scheduleAutoplay();
+});
 
 // =========================
 // TRACK SWIPE
@@ -118,6 +297,7 @@ gallery.addEventListener("touchstart", (e) => {
   isDragging = true;
   targetVelocity = 0;
   velocity = 0;
+  pauseAutoplay();
 });
 
 gallery.addEventListener("touchmove", (e) => {
@@ -135,6 +315,7 @@ gallery.addEventListener("touchmove", (e) => {
 gallery.addEventListener("touchend", () => {
   isDragging = false;
   targetVelocity = 0;
+  handlePortfolioInteraction();
 });
 
 // =========================
@@ -202,6 +383,7 @@ gallery.addEventListener("click", (e) => {
   const img = e.target.closest(".portfolio_img");
   if (!img) return;
 
+  handlePortfolioInteraction();
   const sourceIndex = images.findIndex(item => item.dataset.i === img.dataset.i);
   openLightbox(sourceIndex === -1 ? 0 : sourceIndex);
 });

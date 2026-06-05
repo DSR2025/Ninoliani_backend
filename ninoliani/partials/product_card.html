@@ -1,3 +1,4 @@
+{% load price_format %}
 {% for product in products %}
 <div class="card">
     {% with images=product.images.all %}
@@ -12,10 +13,10 @@
         </div>
         <div class="card_price_wrapper">
             {% if product.discount_price %}
-            <span class="card_price">${{ product.discount_price }}</span>
-            <span class="card_price_non_sale">${{ product.price }}</span>
+            <span class="card_price">${{ product.discount_price|price_display }}</span>
+            <span class="card_price_non_sale">${{ product.price|price_display }}</span>
             {% else %}
-            <span class="card_price">${{ product.price }}</span>
+            <span class="card_price">${{ product.price|price_display }}</span>
             {% endif %}
         </div>
     </a>
